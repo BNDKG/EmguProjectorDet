@@ -149,6 +149,7 @@ namespace EmguTest
         {
             string pathread = OriPath + "\\OriSourcePic.jpg";
             string pathread2 = OriPath + "\\QuadrilateralTransfedPic.jpg";
+            string pathread3 = OriPath + "\\Effect.png";
             string pathsave = OriPath + "\\testoutput.jpg";
 
             Image<Bgra, byte> a = new Image<Bgra, byte>(pathread).Resize(0.4, Inter.Area);  //模板
@@ -220,7 +221,11 @@ namespace EmguTest
 
             // define quadrilateral's corners
 
-            Bitmap sourceImage = a.ToBitmap();
+            //Bitmap bufsourceImage = a.ToBitmap();
+            Bitmap bufsourceImage = new Bitmap(pathread3);
+
+            Bitmap sourceImage = new Bitmap(bufsourceImage, a.Size);
+
             Bitmap bufbitmap = b.ToBitmap();
 
             Bitmap image = new Bitmap(bufbitmap.Width, bufbitmap.Height);
