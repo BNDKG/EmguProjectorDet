@@ -149,7 +149,7 @@ namespace EmguTest
         {
             string pathread = OriPath + "\\OriSourcePic.jpg";
             string pathread2 = OriPath + "\\QuadrilateralTransfedPic.jpg";
-            string pathread3 = OriPath + "\\Effect.png";
+            string pathread3 = OriPath + "\\Effect.jpg";
             string pathsave = OriPath + "\\testoutput.jpg";
 
             Image<Bgra, byte> a = new Image<Bgra, byte>(pathread).Resize(0.4, Inter.Area);  //模板
@@ -270,7 +270,14 @@ namespace EmguTest
 
             capture.Retrieve(frame, 0);    //接收数据
 
+            pictureBox1.Image = frame.Bitmap;
+
+
             frame.Save(pathsave);
+
+            capture.Dispose();
+            viewer.Dispose();
+
             //Image<Bgra, byte> zzz = frame.ToImage<Bgra, byte>();
 
             /*

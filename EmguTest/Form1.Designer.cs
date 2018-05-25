@@ -97,7 +97,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(33, 220);
+            this.button4.Location = new System.Drawing.Point(33, 352);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(101, 43);
             this.button4.TabIndex = 5;
@@ -107,17 +107,17 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(33, 284);
+            this.button5.Location = new System.Drawing.Point(33, 231);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.Size = new System.Drawing.Size(101, 29);
             this.button5.TabIndex = 6;
-            this.button5.Text = "button5";
+            this.button5.Text = "从摄像头获取帧";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(33, 313);
+            this.button6.Location = new System.Drawing.Point(33, 266);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(101, 42);
             this.button6.TabIndex = 7;
@@ -242,7 +242,7 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(33, 361);
+            this.button7.Location = new System.Drawing.Point(33, 314);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(101, 34);
             this.button7.TabIndex = 22;
