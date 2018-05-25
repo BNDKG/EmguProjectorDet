@@ -62,7 +62,7 @@ namespace EmguTest
 
         private void button3_Click(object sender, EventArgs e)
         {
-            string pathread= OriPath+ "\\test1.jpg";
+            string pathread = OriPath + "\\test1.jpg";
 
             string pathread2 = OriPath + "\\test2.jpg";
 
@@ -115,9 +115,9 @@ namespace EmguTest
             dstquad[3].Y = 800;
             Mat mywarpmat = CvInvoke.GetPerspectiveTransform(srcquad, dstquad);
 
-            Mat image2fe=new Mat();
+            Mat image2fe = new Mat();
 
-            CvInvoke.WarpPerspective(image, image2fe, mywarpmat, new Size(1280,960));
+            CvInvoke.WarpPerspective(image, image2fe, mywarpmat, new Size(1280, 960));
 
 
             /*
@@ -208,7 +208,7 @@ namespace EmguTest
                 VectorOfPoint vp = new VectorOfPoint(points2);
                 CvInvoke.Polylines(result, vp, true, new MCvScalar(255, 0, 0, 255), 15);
 
-                
+
 
 
                 corners.Add(new IntPoint(points2[3].X, points2[3].Y));
@@ -221,9 +221,9 @@ namespace EmguTest
             // define quadrilateral's corners
 
             Bitmap sourceImage = a.ToBitmap();
-            Bitmap image = b.ToBitmap();
+            Bitmap bufbitmap = b.ToBitmap();
 
-
+            Bitmap image = new Bitmap(bufbitmap.Width, bufbitmap.Height);
 
 
             // create filter
@@ -242,9 +242,9 @@ namespace EmguTest
         private void button5_Click(object sender, EventArgs e)
         {
 
-            string pathsave = OriPath + "\\testoutput.jpg";
+            string pathsave = OriPath + "\\CameraPic.jpg";
 
-            Mat frame=new Mat();
+            Mat frame = new Mat();
 
 
             /*
@@ -261,11 +261,14 @@ namespace EmguTest
             capture.SetCaptureProperty(CapProp.FrameWidth, 1600);
             //capture.ImageGrabbed += ProcessFrame;
 
+
+
             capture.Retrieve(frame, 0);    //接收数据
 
-            Image<Bgra, byte> zzz = frame.ToImage<Bgra, byte>();
+            frame.Save(pathsave);
+            //Image<Bgra, byte> zzz = frame.ToImage<Bgra, byte>();
 
-
+            /*
             for (int i = 0; i < zzz.Height; i++)
             {
                 for (int ii = 0; ii < zzz.Width; ii++)
@@ -278,20 +281,20 @@ namespace EmguTest
 
                 }
             }
-
+            */
 
             //VideoWriter vw = new public VideoWriter(string fileName, int fps, int width, int height, bool isColor);
 
             //Then write your frame
 
 
-            //frame2 = zzz.Mat;
-
-            Mat frame2 = zzz.Mat;
 
 
+            //Mat frame2 = zzz.Mat;
 
-            frame2.Save(pathsave);
+
+
+            //frame2.Save(pathsave);
             //viewer.ShowDialog(); //显示图像视窗 
 
         }
@@ -300,7 +303,7 @@ namespace EmguTest
 
         private void button6_Click(object sender, EventArgs e)
         {
-            string pathread = OriPath + "\\test224.jpg";
+            string pathread = OriPath + "\\CameraPic.jpg";
 
 
             newbitmap = new Bitmap(pathread);
@@ -379,7 +382,7 @@ namespace EmguTest
 
         }
 
-        public void bitmapupdate(int xxx,int yyy)
+        public void bitmapupdate(int xxx, int yyy)
         {
 
             //int xxx = 100;
