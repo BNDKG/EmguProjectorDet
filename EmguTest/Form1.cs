@@ -53,7 +53,7 @@ namespace EmguTest
         {
             OriPath = System.IO.Directory.GetCurrentDirectory();
 
-            axWindowsMediaPlayer1.URL = OriPath + "\\SourceVideo.mp4";
+            axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.mp4";
             axWindowsMediaPlayer1.Ctlcontrols.stop();
         }
 
@@ -317,10 +317,13 @@ namespace EmguTest
             // 打开视频
             readerzzz.Open(pathvideosource);
 
+            //变换图片的大小
+            Bitmap bufbitmap = new Bitmap(pathread2);
+
             // 生成视频写入器
             VideoFileWriter writerzzz = new VideoFileWriter();
             // 新建一个视频(帧必须是二的倍数)
-            writerzzz.Open("testoutput.avi", (sourcepic.Width / 2) * 2, (sourcepic.Height / 2) * 2, readerzzz.FrameRate, VideoCodec.MPEG4, 25000000);
+            writerzzz.Open("testoutput.avi", (bufbitmap.Width / 2) * 2, (bufbitmap.Height / 2) * 2, readerzzz.FrameRate, VideoCodec.MPEG4, 25000000);
 
             //确认变换位置
             List<IntPoint> corners = new List<IntPoint>();
@@ -330,8 +333,7 @@ namespace EmguTest
             corners.Add(new IntPoint(Convert.ToInt32(textBox13.Text), Convert.ToInt32(textBox14.Text)));
             corners.Add(new IntPoint(Convert.ToInt32(textBox15.Text), Convert.ToInt32(textBox16.Text)));
 
-            //变换图片的大小
-            Bitmap bufbitmap = new Bitmap(pathread2);
+
 
 
             // 对视频的所有帧进行操作
