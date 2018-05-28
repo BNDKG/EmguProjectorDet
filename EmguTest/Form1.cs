@@ -278,7 +278,7 @@ namespace EmguTest
             Bitmap a = new Bitmap(pathread);
             //效果图
             Bitmap bufsourceImage = new Bitmap(pathread3);
-
+            //Bitmap sourceImage = new Bitmap(pathread3);
             Bitmap sourceImage = new Bitmap(bufsourceImage, a.Size);
             //变换图片的
             Bitmap bufbitmap = new Bitmap(pathread2);
@@ -301,7 +301,66 @@ namespace EmguTest
 
         }
 
+        private void videomake()
+        {
+            string pathread = OriPath + "\\OriSourcePic.jpg";
+            string pathread2 = OriPath + "\\QuadrilateralTransfedPic.jpg";
+            string pathread3 = OriPath + "\\Effect.jpg";
+            string pathsave = OriPath + "\\testoutput.jpg";
+            string pathvideosource = OriPath + "\\SourceVideo.mp4";
 
+
+            Bitmap sourcepic = new Bitmap(pathread3);
+
+            // 生成视频生成读取器
+            VideoFileReader readerzzz = new VideoFileReader();
+            // 打开视频
+            readerzzz.Open(pathvideosource);
+
+            // 生成视频写入器
+            VideoFileWriter writerzzz = new VideoFileWriter();
+            // 新建一个视频(帧必须是二的倍数)
+            writerzzz.Open("testoutput.avi", (sourcepic.Width / 2) * 2, (sourcepic.Height / 2) * 2, readerzzz.FrameRate, VideoCodec.MPEG4, 25000000);
+
+            //确认变换位置
+            List<IntPoint> corners = new List<IntPoint>();
+
+            corners.Add(new IntPoint(Convert.ToInt32(textBox9.Text), Convert.ToInt32(textBox10.Text)));
+            corners.Add(new IntPoint(Convert.ToInt32(textBox11.Text), Convert.ToInt32(textBox12.Text)));
+            corners.Add(new IntPoint(Convert.ToInt32(textBox13.Text), Convert.ToInt32(textBox14.Text)));
+            corners.Add(new IntPoint(Convert.ToInt32(textBox15.Text), Convert.ToInt32(textBox16.Text)));
+
+            //变换图片的大小
+            Bitmap bufbitmap = new Bitmap(pathread2);
+
+
+            // 对视频的所有帧进行操作
+            for (int i = 0; i < (readerzzz.FrameCount - 1); i++)
+            {
+                //载入当前帧动画
+                Bitmap curbitmapsource = readerzzz.ReadVideoFrame();
+
+                Bitmap image = new Bitmap(bufbitmap.Width, bufbitmap.Height, curbitmapsource.PixelFormat);
+
+                // create filter
+                BackwardQuadrilateralTransformation filter =
+                    new BackwardQuadrilateralTransformation(curbitmapsource, corners);
+                // apply the filter
+                Bitmap newImage = filter.Apply(image);
+
+                //写入当前帧
+                writerzzz.WriteVideoFrame(newImage);
+
+                image.Dispose();
+                curbitmapsource.Dispose();
+                newImage.Dispose();
+
+            }
+            writerzzz.Close();
+            readerzzz.Close();
+
+
+        }
         private void button5_Click(object sender, EventArgs e)
         {
 
@@ -545,7 +604,7 @@ namespace EmguTest
 
         private void button9_Click(object sender, EventArgs e)
         {
-
+            videomake();
         }
 
         private void button10_Click(object sender, EventArgs e)
@@ -575,5 +634,6 @@ namespace EmguTest
             //this.SetVisibleCore(true);
             this.WindowState = FormWindowState.Normal;
         }
+
     }
 }
