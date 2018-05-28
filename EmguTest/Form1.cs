@@ -210,18 +210,29 @@ namespace EmguTest
                 CvInvoke.Polylines(result, vp, true, new MCvScalar(255, 0, 0, 255), 15);
 
 
+                textBox9.Text = Convert.ToString((int)(points2[3].X * 2.5));
+                textBox10.Text = Convert.ToString((int)(points2[3].Y * 2.5));
 
+                textBox11.Text = Convert.ToString((int)(points2[2].X * 2.5));
+                textBox12.Text = Convert.ToString((int)(points2[2].Y * 2.5));
 
+                textBox13.Text = Convert.ToString((int)(points2[1].X * 2.5));
+                textBox14.Text = Convert.ToString((int)(points2[1].Y * 2.5));
+
+                textBox15.Text = Convert.ToString((int)(points2[0].X * 2.5));
+                textBox16.Text = Convert.ToString((int)(points2[0].Y * 2.5));
+                /*
                 corners.Add(new IntPoint(points2[3].X, points2[3].Y));
                 corners.Add(new IntPoint(points2[2].X, points2[2].Y));
                 corners.Add(new IntPoint(points2[1].X, points2[1].Y));
                 corners.Add(new IntPoint(points2[0].X, points2[0].Y));
-
+                */
             }
 
             // define quadrilateral's corners
 
             //Bitmap bufsourceImage = a.ToBitmap();
+            /*
             Bitmap bufsourceImage = new Bitmap(pathread3);
 
             Bitmap sourceImage = new Bitmap(bufsourceImage, a.Size);
@@ -239,10 +250,54 @@ namespace EmguTest
 
 
             pictureBox2.Image = newImage;
+            
+            newImage.Save(pathsave);
+            */
+
             imageBox1.Image = result;
+        }
+        private void fourbackchange()
+        {
+            string pathread = OriPath + "\\OriSourcePic.jpg";
+            string pathread2 = OriPath + "\\QuadrilateralTransfedPic.jpg";
+            string pathread3 = OriPath + "\\Effect.jpg";
+            string pathsave = OriPath + "\\testoutput.jpg";
+
+
+            List<IntPoint> corners = new List<IntPoint>();
+
+            corners.Add(new IntPoint(Convert.ToInt32(textBox9.Text), Convert.ToInt32(textBox10.Text)));
+            corners.Add(new IntPoint(Convert.ToInt32(textBox11.Text), Convert.ToInt32(textBox12.Text)));
+            corners.Add(new IntPoint(Convert.ToInt32(textBox13.Text), Convert.ToInt32(textBox14.Text)));
+            corners.Add(new IntPoint(Convert.ToInt32(textBox15.Text), Convert.ToInt32(textBox16.Text)));
+
+
+            Bitmap a = new Bitmap(pathread);
+            //效果图
+            Bitmap bufsourceImage = new Bitmap(pathread3);
+
+            Bitmap sourceImage = new Bitmap(bufsourceImage, a.Size);
+            //变换图片的
+            Bitmap bufbitmap = new Bitmap(pathread2);
+
+            Bitmap image = new Bitmap(bufbitmap.Width, bufbitmap.Height);
+
+
+            // create filter
+            BackwardQuadrilateralTransformation filter =
+                new BackwardQuadrilateralTransformation(sourceImage, corners);
+            // apply the filter
+            Bitmap newImage = filter.Apply(image);
+
             newImage.Save(pathsave);
 
+            //Bitmap bufimage = new Bitmap(pathread3);
+
+            pictureBox1.Image = newImage;
+            pictureBox2.Image = newImage;
+
         }
+
 
         private void button5_Click(object sender, EventArgs e)
         {
@@ -485,6 +540,11 @@ namespace EmguTest
         private void button7_Click(object sender, EventArgs e)
         {
             qchange();
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            fourbackchange();
         }
     }
 }
