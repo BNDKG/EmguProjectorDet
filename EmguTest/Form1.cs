@@ -52,6 +52,9 @@ namespace EmguTest
         private void Form1_Load(object sender, EventArgs e)
         {
             OriPath = System.IO.Directory.GetCurrentDirectory();
+
+            axWindowsMediaPlayer1.URL = OriPath + "\\SourceVideo.mp4";
+            axWindowsMediaPlayer1.Ctlcontrols.stop();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -530,13 +533,6 @@ namespace EmguTest
             ActiveForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
         }
 
-        private void pictureBox2_DoubleClick(object sender, EventArgs e)
-        {
-            pictureBox2.BringToFront();
-            pictureBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            ActiveForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-        }
-
         private void button7_Click(object sender, EventArgs e)
         {
             qchange();
@@ -545,6 +541,39 @@ namespace EmguTest
         private void button8_Click(object sender, EventArgs e)
         {
             fourbackchange();
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            pictureBox2.BringToFront();
+            pictureBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            ActiveForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            this.SetVisibleCore(false);
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.WindowState = FormWindowState.Maximized;
+            this.SetVisibleCore(true);
+
+            pictureBox2.BringToFront();
+            pictureBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            ActiveForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            //this.SetVisibleCore(false);
+            this.FormBorderStyle = FormBorderStyle.Sizable;
+            //this.SetVisibleCore(true);
+            this.WindowState = FormWindowState.Normal;
         }
     }
 }
