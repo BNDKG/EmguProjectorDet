@@ -687,6 +687,33 @@ namespace EmguTest
             QuadrilateralFinder qf = new QuadrilateralFinder();
             List<IntPoint> corners = qf.ProcessImage(testbitmap);
 
+            List<IntPoint> corners2 = CornersChange(corners, temp4.Width, temp4.Height);
+
+            PointF aaa = new PointF(corners2[0].X, corners2[0].Y);
+            PointF bbb = new PointF(corners2[1].X, corners2[1].Y);
+            PointF ccc = new PointF(corners2[2].X, corners2[2].Y);
+            PointF ddd = new PointF(corners2[3].X, corners2[3].Y);
+
+            PointF testsdd = GetIntersection(aaa, ccc, bbb, ddd);
+
+            PointF aa = poschange2(aaa, testsdd);
+            PointF bb = poschange2(bbb, testsdd);
+            PointF cc = poschange2(ccc, testsdd);
+            PointF dd = poschange2(ddd, testsdd);
+
+            List<IntPoint> corners3 = new List<IntPoint>();
+
+            IntPoint buff = new IntPoint((int)aa.X, (int)aa.Y);
+            corners3.Add(buff);
+            buff = new IntPoint((int)bb.X, (int)bb.Y);
+            corners3.Add(buff);
+            buff = new IntPoint((int)cc.X, (int)cc.Y);
+            corners3.Add(buff);
+            buff = new IntPoint((int)dd.X, (int)dd.Y);
+            corners3.Add(buff);
+
+
+
 
             BitmapData data = testbitmap.LockBits(new Rectangle(0, 0, testbitmap.Width, testbitmap.Height),
     ImageLockMode.ReadWrite, testbitmap.PixelFormat);
@@ -705,6 +732,76 @@ namespace EmguTest
             pictureBox1.Image = testbitmap;
 
         }
+
+
+        /// <summary>
+        /// 四边形角点重新排序改为左上 右上 右下 左下 的顺序
+        /// </summary>
+        /// <param name="CornersInput">乱序四边型角点集合</param>
+        /// <param name="width">四边形角点信息所对应的图片的宽</param>
+        /// <param name="height">四边形角点信息所对应的图片的高</param>
+        /// <returns></returns>
+        public List<IntPoint> CornersChange(List<IntPoint> CornersInput, int width, int height)
+        {
+            if (CornersInput.Count() != 4)
+            {
+                return CornersInput;
+            }
+
+
+            //double[] order = new double[4];
+            List<IntPoint> CornersOutput = new List<IntPoint>();
+
+            int min = width + height;
+            int index = 0;
+
+            for (int i = 0; i < CornersInput.Count(); i++)
+            {
+                int curbuf = CornersInput[i].X + CornersInput[i].Y;
+                if (curbuf < min)
+                {
+                    min = curbuf;
+                    index = i;
+                }
+
+            }
+            CornersOutput.Add(CornersInput[index]);
+            CornersInput.Remove(CornersInput[index]);
+
+            index = 0;
+            min = width + height;
+            for (int i = 0; i < CornersInput.Count(); i++)
+            {
+                int curbuf = (width - CornersInput[i].X) + CornersInput[i].Y;
+                if (curbuf < min)
+                {
+                    min = curbuf;
+                    index = i;
+                }
+            }
+            CornersOutput.Add(CornersInput[index]);
+            CornersInput.Remove(CornersInput[index]);
+
+            index = 0;
+            min = width + height;
+            for (int i = 0; i < CornersInput.Count(); i++)
+            {
+                int curbuf = (width - CornersInput[i].X) + (height - CornersInput[i].Y);
+                if (curbuf < min)
+                {
+                    min = curbuf;
+                    index = i;
+                }
+            }
+            CornersOutput.Add(CornersInput[index]);
+            CornersInput.Remove(CornersInput[index]);
+
+            CornersOutput.Add(CornersInput[0]);
+
+
+            return CornersOutput;
+        }
+
         private void picdiffer()
         {
             string pathsave = OriPath + "\\Normalpic.jpg";
@@ -842,6 +939,240 @@ namespace EmguTest
                 timer1.Stop();
                 getstep = 0;
             }
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            string pathsave = OriPath + "\\White.jpg";
+            string pathread = OriPath + "\\Black.jpg";
+
+
+            Bitmap Normalbitmap = new Bitmap(1920, 1080, PixelFormat.Format24bppRgb);
+
+
+
+
+            //背景图片
+            BitmapData curimageData = Normalbitmap.LockBits(new Rectangle(0, 0, Normalbitmap.Width, Normalbitmap.Height),
+            ImageLockMode.ReadOnly, Normalbitmap.PixelFormat);
+
+
+            unsafe
+            {
+                try
+                {
+                    UnmanagedImage img = new UnmanagedImage(curimageData);
+
+                    int height = img.Height;
+                    int width = img.Width;
+                    int pixelSize = (img.PixelFormat == PixelFormat.Format24bppRgb) ? 3 : 4;
+                    byte* p = (byte*)img.ImageData.ToPointer();
+
+
+
+                    // for each line
+                    for (int y = 0; y < height; y++)
+                    {
+
+                        // for each pixel
+                        for (int x = 0; x < width; x++, p += pixelSize)
+                        {
+                            int delx = Math.Abs(width / 2 - x);
+                            int dely = Math.Abs(height / 2 - y);
+
+                            if((delx< (width / 4))&& (dely < (height / 4)))
+                            {
+                                p[RGB.R] = (byte)255;
+                                p[RGB.G] = (byte)255;
+                                p[RGB.B] = (byte)255;
+                            }
+                            else
+                            {
+                                p[RGB.R] = (byte)0;
+                                p[RGB.G] = (byte)0;
+                                p[RGB.B] = (byte)0;
+                            }
+
+                        }
+
+                    }
+
+
+
+                }
+                finally
+                {
+                    Normalbitmap.UnlockBits(curimageData); //Unlock
+
+                }
+
+
+
+
+            }
+
+            Normalbitmap.Save(pathsave);
+
+
+
+
+
+
+        }
+
+        public void foundcornors()
+        {
+
+            PointF aaa = new PointF(Convert.ToInt32(textBox1.Text), Convert.ToInt32(textBox2.Text));
+            PointF bbb = new PointF(Convert.ToInt32(textBox3.Text), Convert.ToInt32(textBox4.Text));
+            PointF ccc = new PointF(Convert.ToInt32(textBox5.Text), Convert.ToInt32(textBox6.Text));
+            PointF ddd = new PointF(Convert.ToInt32(textBox7.Text), Convert.ToInt32(textBox8.Text));
+
+            PointF testsdd = GetIntersection(aaa, ccc, bbb, ddd);
+
+            PointF aa= poschange2(aaa, testsdd);
+            PointF bb = poschange2(bbb, testsdd);
+            PointF cc = poschange2(ccc, testsdd);
+            PointF dd = poschange2(ddd, testsdd);
+
+
+            textBox1.Text = ((int)aa.X).ToString();
+            textBox2.Text = ((int)aa.Y).ToString();
+            textBox3.Text = ((int)bb.X).ToString();
+            textBox4.Text = ((int)bb.Y).ToString();
+            textBox5.Text = ((int)cc.X).ToString();
+            textBox6.Text = ((int)cc.Y).ToString();
+            textBox7.Text = ((int)dd.X).ToString();
+            textBox8.Text = ((int)dd.Y).ToString();
+
+
+            PointF easdad = new PointF(6, 1);
+        }
+
+        public void foundcornors2()
+        {
+
+            PointF aaa = new PointF(Convert.ToInt32(textBox1.Text), Convert.ToInt32(textBox2.Text));
+            PointF bbb = new PointF(Convert.ToInt32(textBox3.Text), Convert.ToInt32(textBox4.Text));
+            PointF ccc = new PointF(Convert.ToInt32(textBox5.Text), Convert.ToInt32(textBox6.Text));
+            PointF ddd = new PointF(Convert.ToInt32(textBox7.Text), Convert.ToInt32(textBox8.Text));
+
+            PointF testsdd = GetIntersection(aaa, ccc, bbb, ddd);
+
+            PointF aa = poschange2(aaa, testsdd);
+            PointF bb = poschange2(bbb, testsdd);
+            PointF cc = poschange2(ccc, testsdd);
+            PointF dd = poschange2(ddd, testsdd);
+
+
+            textBox1.Text = ((int)aa.X).ToString();
+            textBox2.Text = ((int)aa.Y).ToString();
+            textBox3.Text = ((int)bb.X).ToString();
+            textBox4.Text = ((int)bb.Y).ToString();
+            textBox5.Text = ((int)cc.X).ToString();
+            textBox6.Text = ((int)cc.Y).ToString();
+            textBox7.Text = ((int)dd.X).ToString();
+            textBox8.Text = ((int)dd.Y).ToString();
+
+
+            PointF easdad = new PointF(6, 1);
+        }
+        public PointF poschange2(PointF point, PointF sentpoint)
+        {
+            PointF changedpoint = new PointF(0, 0);
+            changedpoint.X = 2 * point.X - sentpoint.X;
+            changedpoint.Y = 2 * point.Y - sentpoint.Y;
+            return changedpoint;
+        }
+
+        public static PointF GetIntersection(PointF lineFirstStar, PointF lineFirstEnd, PointF lineSecondStar, PointF lineSecondEnd)
+        {
+            /*
+             * L1，L2都存在斜率的情况：
+             * 直线方程L1: ( y - y1 ) / ( y2 - y1 ) = ( x - x1 ) / ( x2 - x1 ) 
+             * => y = [ ( y2 - y1 ) / ( x2 - x1 ) ]( x - x1 ) + y1
+             * 令 a = ( y2 - y1 ) / ( x2 - x1 )
+             * 有 y = a * x - a * x1 + y1   .........1
+             * 直线方程L2: ( y - y3 ) / ( y4 - y3 ) = ( x - x3 ) / ( x4 - x3 )
+             * 令 b = ( y4 - y3 ) / ( x4 - x3 )
+             * 有 y = b * x - b * x3 + y3 ..........2
+             * 
+             * 如果 a = b，则两直线平等，否则， 联解方程 1,2，得:
+             * x = ( a * x1 - b * x3 - y1 + y3 ) / ( a - b )
+             * y = a * x - a * x1 + y1
+             * 
+             * L1存在斜率, L2平行Y轴的情况：
+             * x = x3
+             * y = a * x3 - a * x1 + y1
+             * 
+             * L1 平行Y轴，L2存在斜率的情况：
+             * x = x1
+             * y = b * x - b * x3 + y3
+             * 
+             * L1与L2都平行Y轴的情况：
+             * 如果 x1 = x3，那么L1与L2重合，否则平等
+             * 
+            */
+            float a = 0, b = 0;
+            int state = 0;
+            if (lineFirstStar.X != lineFirstEnd.X)
+            {
+                a = (lineFirstEnd.Y - lineFirstStar.Y) / (lineFirstEnd.X - lineFirstStar.X);
+                state |= 1;
+            }
+            if (lineSecondStar.X != lineSecondEnd.X)
+            {
+                b = (lineSecondEnd.Y - lineSecondStar.Y) / (lineSecondEnd.X - lineSecondStar.X);
+                state |= 2;
+            }
+            switch (state)
+            {
+                case 0: //L1与L2都平行Y轴
+                    {
+                        if (lineFirstStar.X == lineSecondStar.X)
+                        {
+                            //throw new Exception("两条直线互相重合，且平行于Y轴，无法计算交点。");
+                            return new PointF(0, 0);
+                        }
+                        else
+                        {
+                            //throw new Exception("两条直线互相平行，且平行于Y轴，无法计算交点。");
+                            return new PointF(0, 0);
+                        }
+                    }
+                case 1: //L1存在斜率, L2平行Y轴
+                    {
+                        float x = lineSecondStar.X;
+                        float y = (lineFirstStar.X - x) * (-a) + lineFirstStar.Y;
+                        return new PointF(x, y);
+                    }
+                case 2: //L1 平行Y轴，L2存在斜率
+                    {
+                        float x = lineFirstStar.X;
+                        //网上有相似代码的，这一处是错误的。你可以对比case 1 的逻辑 进行分析
+                        //源code:lineSecondStar * x + lineSecondStar * lineSecondStar.X + p3.Y;
+                        float y = (lineSecondStar.X - x) * (-b) + lineSecondStar.Y;
+                        return new PointF(x, y);
+                    }
+                case 3: //L1，L2都存在斜率
+                    {
+                        if (a == b)
+                        {
+                            // throw new Exception("两条直线平行或重合，无法计算交点。");
+                            return new PointF(0, 0);
+                        }
+                        float x = (a * lineFirstStar.X - b * lineSecondStar.X - lineFirstStar.Y + lineSecondStar.Y) / (a - b);
+                        float y = a * x - a * lineFirstStar.X + lineFirstStar.Y;
+                        return new PointF(x, y);
+                    }
+            }
+            // throw new Exception("不可能发生的情况");
+            return new PointF(0, 0);
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            foundcornors();
         }
     }
 }
