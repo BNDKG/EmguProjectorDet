@@ -70,6 +70,10 @@
             this.button10 = new System.Windows.Forms.Button();
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
+            this.button13 = new System.Windows.Forms.Button();
+            this.button14 = new System.Windows.Forms.Button();
+            this.button15 = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.imageBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -117,7 +121,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(33, 289);
+            this.button4.Location = new System.Drawing.Point(12, 289);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(101, 43);
             this.button4.TabIndex = 5;
@@ -127,7 +131,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(33, 168);
+            this.button5.Location = new System.Drawing.Point(12, 168);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(101, 29);
             this.button5.TabIndex = 6;
@@ -137,7 +141,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(33, 203);
+            this.button6.Location = new System.Drawing.Point(12, 203);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(101, 42);
             this.button6.TabIndex = 7;
@@ -262,7 +266,7 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(33, 251);
+            this.button7.Location = new System.Drawing.Point(12, 251);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(101, 34);
             this.button7.TabIndex = 22;
@@ -364,7 +368,7 @@
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(33, 338);
+            this.button8.Location = new System.Drawing.Point(12, 338);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(101, 41);
             this.button8.TabIndex = 35;
@@ -374,7 +378,7 @@
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(33, 385);
+            this.button9.Location = new System.Drawing.Point(12, 385);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(101, 44);
             this.button9.TabIndex = 36;
@@ -421,11 +425,49 @@
             this.button12.UseVisualStyleBackColor = true;
             this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
+            // button13
+            // 
+            this.button13.Location = new System.Drawing.Point(12, 435);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(75, 23);
+            this.button13.TabIndex = 42;
+            this.button13.Text = "差分分析";
+            this.button13.UseVisualStyleBackColor = true;
+            this.button13.Click += new System.EventHandler(this.button13_Click);
+            // 
+            // button14
+            // 
+            this.button14.Location = new System.Drawing.Point(12, 464);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(75, 38);
+            this.button14.TabIndex = 43;
+            this.button14.Text = "双图像差分";
+            this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.button14_Click);
+            // 
+            // button15
+            // 
+            this.button15.Location = new System.Drawing.Point(98, 435);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(75, 23);
+            this.button15.TabIndex = 44;
+            this.button15.Text = "采集差分";
+            this.button15.UseVisualStyleBackColor = true;
+            this.button15.Click += new System.EventHandler(this.button15_Click);
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 3000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1664, 857);
+            this.Controls.Add(this.button15);
+            this.Controls.Add(this.button14);
+            this.Controls.Add(this.button13);
             this.Controls.Add(this.button12);
             this.Controls.Add(this.button11);
             this.Controls.Add(this.button10);
@@ -520,6 +562,10 @@
         private System.Windows.Forms.Button button10;
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

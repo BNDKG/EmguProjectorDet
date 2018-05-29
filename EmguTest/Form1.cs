@@ -53,7 +53,7 @@ namespace EmguTest
         {
             OriPath = System.IO.Directory.GetCurrentDirectory();
 
-            axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.mp4";
+            axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.avi";
             axWindowsMediaPlayer1.Ctlcontrols.stop();
         }
 
@@ -368,34 +368,9 @@ namespace EmguTest
 
             string pathsave = OriPath + "\\CameraPic.jpg";
 
-            Mat frame = new Mat();
+            snap(pathsave);
 
 
-            /*
-            Application.Idle += new EventHandler(delegate (object sender2, EventArgs e2)
-            {  // “Idle”处理循环的事件处理过程  
-                viewer.Image = capture.QueryFrame(); //在视窗中显示抓取的帧图像  
-            });
-            */
-
-            ImageViewer viewer = new ImageViewer(); //创建图像视窗  
-            VideoCapture capture = new VideoCapture(); //创建摄像头捕获
-
-            capture.SetCaptureProperty(CapProp.FrameHeight, 900);
-            capture.SetCaptureProperty(CapProp.FrameWidth, 1600);
-            //capture.ImageGrabbed += ProcessFrame;
-
-
-
-            capture.Retrieve(frame, 0);    //接收数据
-
-            pictureBox1.Image = frame.Bitmap;
-
-
-            frame.Save(pathsave);
-
-            capture.Dispose();
-            viewer.Dispose();
 
             //Image<Bgra, byte> zzz = frame.ToImage<Bgra, byte>();
 
@@ -429,6 +404,41 @@ namespace EmguTest
             //viewer.ShowDialog(); //显示图像视窗 
 
         }
+        private void snap(string pathsave)
+        {
+            
+
+            Mat frame = new Mat();
+
+
+            /*
+            Application.Idle += new EventHandler(delegate (object sender2, EventArgs e2)
+            {  // “Idle”处理循环的事件处理过程  
+                viewer.Image = capture.QueryFrame(); //在视窗中显示抓取的帧图像  
+            });
+            */
+
+            //ImageViewer viewer = new ImageViewer(); //创建图像视窗  
+            VideoCapture capture = new VideoCapture(); //创建摄像头捕获
+
+            capture.SetCaptureProperty(CapProp.FrameHeight, 900);
+            capture.SetCaptureProperty(CapProp.FrameWidth, 1600);
+            //capture.ImageGrabbed += ProcessFrame;
+
+
+
+            capture.Retrieve(frame, 0);    //接收数据
+
+            pictureBox1.Image = frame.Bitmap;
+
+
+            frame.Save(pathsave);
+            //frame.Dispose();
+            capture.Dispose();
+            //viewer.Dispose();
+        }
+
+
         public Bitmap newbitmap;
         public Bitmap curbitmap;
 
@@ -618,6 +628,11 @@ namespace EmguTest
 
         private void button11_Click(object sender, EventArgs e)
         {
+            fullscreen();
+
+        }
+        private void fullscreen()
+        {
             this.SetVisibleCore(false);
             this.FormBorderStyle = FormBorderStyle.None;
             this.WindowState = FormWindowState.Maximized;
@@ -626,10 +641,8 @@ namespace EmguTest
             pictureBox2.BringToFront();
             pictureBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             ActiveForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-
         }
-
-        private void button12_Click(object sender, EventArgs e)
+        private void backscreen()
         {
             //this.SetVisibleCore(false);
             this.FormBorderStyle = FormBorderStyle.Sizable;
@@ -637,5 +650,198 @@ namespace EmguTest
             this.WindowState = FormWindowState.Normal;
         }
 
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            backscreen();
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            string pathsave = OriPath + "\\Normalpic.jpg";
+            string pathsave2 = OriPath + "\\Whitepic.jpg";
+            string pathsave3 = OriPath + "\\diffedpic.jpg";
+
+
+            Bitmap temp1;
+
+            Bitmap temp2;
+            Bitmap temp3;
+            Bitmap temp4;
+            Bitmap temp5;
+
+            Bitmap temp7;
+            Bitmap temp8;
+            Bitmap temp9;
+
+            temp1 = new Bitmap(pathsave3);
+            //灰度转换
+            temp2 = new Grayscale(0.2125, 0.7154, 0.0721).Apply(temp1);
+            //二值化
+            temp3 = new Threshold(30).Apply(temp2);
+
+            temp4 = new BlobsFiltering(40, 40, temp3.Width, temp3.Height).Apply(temp3);
+
+            Bitmap testbitmap = new Bitmap(temp4);
+            // get corners of the quadrilateral
+            QuadrilateralFinder qf = new QuadrilateralFinder();
+            List<IntPoint> corners = qf.ProcessImage(testbitmap);
+
+
+            BitmapData data = testbitmap.LockBits(new Rectangle(0, 0, testbitmap.Width, testbitmap.Height),
+    ImageLockMode.ReadWrite, testbitmap.PixelFormat);
+
+            Drawing.Polygon(data, corners, Color.Red);
+            for (int i = 0; i < corners.Count; i++)
+            {
+                Drawing.FillRectangle(data,
+                    new Rectangle(corners[i].X - 2, corners[i].Y - 2, 5, 5),
+                    Color.FromArgb(i * 32 + 127 + 32, i * 64, i * 64));
+            }
+
+            testbitmap.UnlockBits(data);
+
+
+            pictureBox1.Image = testbitmap;
+
+        }
+        private void picdiffer()
+        {
+            string pathsave = OriPath + "\\Normalpic.jpg";
+            string pathsave2 = OriPath + "\\Whitepic.jpg";
+            string pathsave3 = OriPath + "\\diffedpic.jpg";
+            string pathsave4 = OriPath + "\\diffedpic2.jpg";
+
+            Bitmap buf = new Bitmap(pathsave);
+
+            Bitmap Normalbitmap = new Bitmap(buf);
+
+            buf = new Bitmap(pathsave2);
+
+            Bitmap Whitebitmap = new Bitmap(buf);
+
+
+            buf.Dispose();
+
+            //背景图片
+            BitmapData curimageData = Normalbitmap.LockBits(new Rectangle(0, 0, Normalbitmap.Width, Normalbitmap.Height),
+            ImageLockMode.ReadOnly, Normalbitmap.PixelFormat);
+
+            //灯光图片
+            BitmapData curimageData2 = Whitebitmap.LockBits(new Rectangle(0, 0, Whitebitmap.Width, Whitebitmap.Height),
+            ImageLockMode.ReadOnly, Whitebitmap.PixelFormat);
+
+            unsafe
+            {
+                try
+                {
+                    UnmanagedImage img = new UnmanagedImage(curimageData);
+
+                    int height = img.Height;
+                    int width = img.Width;
+                    int pixelSize = (img.PixelFormat == PixelFormat.Format24bppRgb) ? 3 : 4;
+                    byte* p = (byte*)img.ImageData.ToPointer();
+
+                    UnmanagedImage img2 = new UnmanagedImage(curimageData2);
+
+                    int height2 = img2.Height;
+                    int width2 = img2.Width;
+                    int pixelSize2 = (img2.PixelFormat == PixelFormat.Format24bppRgb) ? 3 : 4;
+                    byte* p2 = (byte*)img2.ImageData.ToPointer();
+
+                    // for each line
+                    for (int y = 0; y < height; y++)
+                    {
+
+                        // for each pixel
+                        for (int x = 0; x < width; x++, p += pixelSize, p2 += pixelSize2)
+                        {
+
+                            float rr = Math.Abs(p2[RGB.R] - p[RGB.R]);
+                            float gg = Math.Abs(p2[RGB.G] - p[RGB.G]);
+                            float bb = Math.Abs(p2[RGB.B] - p[RGB.B]);
+
+
+                            p[RGB.R] = (byte)rr ;
+                            p[RGB.G] = (byte)gg ;
+                            p[RGB.B] = (byte)bb ;
+
+                        }
+
+                    }
+
+
+
+                }
+                finally
+                {
+                    Normalbitmap.UnlockBits(curimageData); //Unlock
+                    Whitebitmap.UnlockBits(curimageData2);
+                }
+
+
+
+
+            }
+
+            Normalbitmap.Save(pathsave3);
+
+            //Normalbitmap.Save(pathsave3);
+
+            //Normalbitmap.Dispose();
+            //Whitebitmap.Dispose();
+
+
+
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            picdiffer();
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            timer1.Start();
+
+
+        }
+        public int getstep = 0;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            string pathsave = OriPath + "\\Normalpic.jpg";
+            string pathsave2 = OriPath + "\\Whitepic.jpg";
+
+            string pathread = OriPath + "\\White.jpg";
+            string pathread2 = OriPath + "\\Black.jpg";
+
+            Bitmap white = new Bitmap(pathread);
+            Bitmap black = new Bitmap(pathread2);
+
+
+            if (getstep == 0)
+            {
+                pictureBox2.Image = black;
+                fullscreen();
+                getstep++;
+            }
+            else if(getstep == 1)
+            {
+                snap(pathsave);               
+                getstep++;
+            }
+            else if (getstep == 2)
+            {
+                pictureBox2.Image = white;
+                getstep++;
+            }
+            else if (getstep == 3)
+            {
+                snap(pathsave2);
+                backscreen();
+                timer1.Stop();
+                getstep = 0;
+            }
+        }
     }
 }
