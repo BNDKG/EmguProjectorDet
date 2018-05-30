@@ -53,8 +53,8 @@ namespace EmguTest
         {
             OriPath = System.IO.Directory.GetCurrentDirectory();
 
-            axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.avi";
-            axWindowsMediaPlayer1.Ctlcontrols.stop();
+            //axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.avi";
+            //axWindowsMediaPlayer1.Ctlcontrols.stop();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -620,7 +620,7 @@ namespace EmguTest
 
         private void button9_Click(object sender, EventArgs e)
         {
-            axWindowsMediaPlayer1.URL = OriPath + "\\other.avi";
+            //axWindowsMediaPlayer1.URL = OriPath + "\\other.avi";
             videomake();
             axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.avi";
         }
@@ -688,7 +688,7 @@ namespace EmguTest
             //灰度转换
             temp2 = new Grayscale(0.2125, 0.7154, 0.0721).Apply(temp1);
             //二值化
-            temp3 = new Threshold(30).Apply(temp2);
+            temp3 = new Threshold(15).Apply(temp2);
 
             temp4 = new BlobsFiltering(40, 40, temp3.Width, temp3.Height).Apply(temp3);
 
@@ -954,15 +954,19 @@ namespace EmguTest
             {
                 snap(pathsave2);
                 snap(pathsave3);
-                backscreen();
+                //backscreen();
                 //进行投影差分
                 picdiffer();
                 //进行差分分析
                 diffanly();
                 //导入摄像头图像
                 inputoripic();
-                //寻找匹配
+                //转换成摄像头视角
                 qchange();
+                //匹配
+                GetMatch();
+                //得到图案
+                fourbackchange();
 
                 timer1.Stop();
                 getstep = 0;
