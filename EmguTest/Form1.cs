@@ -444,6 +444,12 @@ namespace EmguTest
 
         private void button6_Click(object sender, EventArgs e)
         {
+            inputoripic();
+
+
+        }
+        public void inputoripic()
+        {
             string pathread = OriPath + "\\CameraPic.jpg";
 
 
@@ -453,8 +459,6 @@ namespace EmguTest
 
 
             pictureBox1.Image = curbitmap;
-
-
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -616,7 +620,9 @@ namespace EmguTest
 
         private void button9_Click(object sender, EventArgs e)
         {
+            axWindowsMediaPlayer1.URL = OriPath + "\\other.avi";
             videomake();
+            axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.avi";
         }
 
         private void button10_Click(object sender, EventArgs e)
@@ -657,6 +663,10 @@ namespace EmguTest
         }
 
         private void button13_Click(object sender, EventArgs e)
+        {
+            diffanly();
+        }
+        public void diffanly()
         {
             string pathsave = OriPath + "\\Normalpic.jpg";
             string pathsave2 = OriPath + "\\Whitepic.jpg";
@@ -737,7 +747,6 @@ namespace EmguTest
 
 
             pictureBox1.Image = testbitmap;
-
         }
 
 
@@ -915,6 +924,7 @@ namespace EmguTest
         {
             string pathsave = OriPath + "\\Normalpic.jpg";
             string pathsave2 = OriPath + "\\Whitepic.jpg";
+            string pathsave3 = OriPath + "\\CameraPic.jpg";
 
             string pathread = OriPath + "\\White.jpg";
             string pathread2 = OriPath + "\\Black.jpg";
@@ -931,7 +941,8 @@ namespace EmguTest
             }
             else if(getstep == 1)
             {
-                snap(pathsave);               
+                snap(pathsave);
+
                 getstep++;
             }
             else if (getstep == 2)
@@ -942,7 +953,17 @@ namespace EmguTest
             else if (getstep == 3)
             {
                 snap(pathsave2);
+                snap(pathsave3);
                 backscreen();
+                //进行投影差分
+                picdiffer();
+                //进行差分分析
+                diffanly();
+                //导入摄像头图像
+                inputoripic();
+                //寻找匹配
+                qchange();
+
                 timer1.Stop();
                 getstep = 0;
             }
@@ -1234,6 +1255,49 @@ namespace EmguTest
 
             bufbitmap.Save(pathread);
 
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            string saveFileName = OriPath + "\\test.txt";
+
+            //write txt
+            StringBuilder builder = new StringBuilder();
+            FileStream fs = new FileStream(saveFileName, FileMode.Create);
+            StreamWriter sw = new StreamWriter(fs, Encoding.Default);
+            builder.AppendLine(textBox1.Text);
+            builder.AppendLine(textBox2.Text);
+            builder.AppendLine(textBox3.Text);
+            builder.AppendLine(textBox4.Text);
+            builder.AppendLine(textBox5.Text);
+            builder.AppendLine(textBox6.Text);
+            builder.AppendLine(textBox7.Text);
+            builder.AppendLine(textBox8.Text);
+
+            sw.Write(builder);
+            sw.Close();
+            fs.Close();
+
+
+        }
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+            string filePath = OriPath + "\\test.txt";
+
+            //read txt
+            string[] allLines = File.ReadAllLines(filePath);
+
+            textBox1.Text = allLines[0];
+            textBox2.Text = allLines[1];
+            textBox3.Text = allLines[2];
+            textBox4.Text = allLines[3];
+            textBox5.Text = allLines[4];
+            textBox6.Text = allLines[5];
+            textBox7.Text = allLines[6];
+            textBox8.Text = allLines[7];
+
+            int dfs = 13;
         }
     }
 }
