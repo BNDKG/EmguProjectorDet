@@ -1174,5 +1174,59 @@ namespace EmguTest
         {
             foundcornors();
         }
+
+        private void textBox17_DragDrop(object sender, DragEventArgs e)
+        {
+            string path = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
+            textBox17.Text = path;
+        }
+
+        private void textBox18_DragDrop(object sender, DragEventArgs e)
+        {
+            string path = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
+            textBox18.Text = path;
+        }
+
+        private void textBox17_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Link;
+            else e.Effect = DragDropEffects.None;
+        }
+
+        private void textBox18_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Link;
+            else e.Effect = DragDropEffects.None;
+        }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            string pathread3 = OriPath + "\\Effect.jpg";
+
+
+            // 生成视频生成读取器
+            VideoFileReader readerzzz = new VideoFileReader();
+            // 打开视频
+            readerzzz.Open(textBox18.Text);
+
+            //载入当前帧动画
+            Bitmap curbitmapsource = readerzzz.ReadVideoFrame();
+
+
+            curbitmapsource.Save(pathread3);
+
+            readerzzz.Dispose();
+            curbitmapsource.Dispose();
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            string pathread = OriPath + "\\OriSourcePic.jpg";
+
+            Bitmap bufbitmap = new Bitmap(textBox17.Text);
+
+            bufbitmap.Save(pathread);
+
+        }
     }
 }

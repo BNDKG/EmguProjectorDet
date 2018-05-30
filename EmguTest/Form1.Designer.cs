@@ -76,6 +76,12 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.button16 = new System.Windows.Forms.Button();
             this.button17 = new System.Windows.Forms.Button();
+            this.button18 = new System.Windows.Forms.Button();
+            this.textBox17 = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.textBox18 = new System.Windows.Forms.TextBox();
+            this.button19 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.imageBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -84,9 +90,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(59, 45);
+            this.button1.Location = new System.Drawing.Point(12, 29);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(102, 59);
+            this.button1.Size = new System.Drawing.Size(149, 59);
             this.button1.TabIndex = 0;
             this.button1.Text = "打开项目所在文件夹";
             this.button1.UseVisualStyleBackColor = true;
@@ -103,7 +109,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(12, 110);
+            this.button2.Location = new System.Drawing.Point(374, 800);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 3;
@@ -113,7 +119,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(86, 110);
+            this.button3.Location = new System.Drawing.Point(455, 800);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 4;
@@ -123,9 +129,9 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(86, 190);
+            this.button4.Location = new System.Drawing.Point(86, 185);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 43);
+            this.button4.Size = new System.Drawing.Size(75, 40);
             this.button4.TabIndex = 5;
             this.button4.Text = "寻找匹配并转换";
             this.button4.UseVisualStyleBackColor = true;
@@ -135,7 +141,7 @@
             // 
             this.button5.Location = new System.Drawing.Point(12, 139);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 44);
+            this.button5.Size = new System.Drawing.Size(75, 40);
             this.button5.TabIndex = 6;
             this.button5.Text = "从摄像头获取帧";
             this.button5.UseVisualStyleBackColor = true;
@@ -143,9 +149,9 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(86, 141);
+            this.button6.Location = new System.Drawing.Point(86, 139);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 42);
+            this.button6.Size = new System.Drawing.Size(75, 40);
             this.button6.TabIndex = 7;
             this.button6.Text = "导入原始图像";
             this.button6.UseVisualStyleBackColor = true;
@@ -268,9 +274,9 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(12, 189);
+            this.button7.Location = new System.Drawing.Point(12, 185);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(75, 44);
+            this.button7.Size = new System.Drawing.Size(75, 40);
             this.button7.TabIndex = 22;
             this.button7.Text = "投影位置寻找";
             this.button7.UseVisualStyleBackColor = true;
@@ -370,9 +376,9 @@
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(12, 239);
+            this.button8.Location = new System.Drawing.Point(12, 231);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(101, 41);
+            this.button8.Size = new System.Drawing.Size(149, 41);
             this.button8.TabIndex = 35;
             this.button8.Text = "手动校准";
             this.button8.UseVisualStyleBackColor = true;
@@ -380,9 +386,9 @@
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(12, 286);
+            this.button9.Location = new System.Drawing.Point(12, 380);
             this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(101, 44);
+            this.button9.Size = new System.Drawing.Size(149, 44);
             this.button9.TabIndex = 36;
             this.button9.Text = "进行视频转换";
             this.button9.UseVisualStyleBackColor = true;
@@ -429,9 +435,9 @@
             // 
             // button13
             // 
-            this.button13.Location = new System.Drawing.Point(12, 336);
+            this.button13.Location = new System.Drawing.Point(12, 334);
             this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(75, 23);
+            this.button13.Size = new System.Drawing.Size(75, 40);
             this.button13.TabIndex = 42;
             this.button13.Text = "差分分析";
             this.button13.UseVisualStyleBackColor = true;
@@ -439,9 +445,9 @@
             // 
             // button14
             // 
-            this.button14.Location = new System.Drawing.Point(12, 365);
+            this.button14.Location = new System.Drawing.Point(86, 288);
             this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(75, 38);
+            this.button14.Size = new System.Drawing.Size(75, 40);
             this.button14.TabIndex = 43;
             this.button14.Text = "双图像差分";
             this.button14.UseVisualStyleBackColor = true;
@@ -449,9 +455,9 @@
             // 
             // button15
             // 
-            this.button15.Location = new System.Drawing.Point(98, 336);
+            this.button15.Location = new System.Drawing.Point(12, 288);
             this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(75, 23);
+            this.button15.Size = new System.Drawing.Size(75, 40);
             this.button15.TabIndex = 44;
             this.button15.Text = "采集差分";
             this.button15.UseVisualStyleBackColor = true;
@@ -464,9 +470,9 @@
             // 
             // button16
             // 
-            this.button16.Location = new System.Drawing.Point(93, 363);
+            this.button16.Location = new System.Drawing.Point(12, 430);
             this.button16.Name = "button16";
-            this.button16.Size = new System.Drawing.Size(80, 42);
+            this.button16.Size = new System.Drawing.Size(75, 40);
             this.button16.TabIndex = 45;
             this.button16.Text = "放映图片生成";
             this.button16.UseVisualStyleBackColor = true;
@@ -474,7 +480,7 @@
             // 
             // button17
             // 
-            this.button17.Location = new System.Drawing.Point(12, 422);
+            this.button17.Location = new System.Drawing.Point(288, 793);
             this.button17.Name = "button17";
             this.button17.Size = new System.Drawing.Size(80, 37);
             this.button17.TabIndex = 46;
@@ -482,11 +488,75 @@
             this.button17.UseVisualStyleBackColor = true;
             this.button17.Click += new System.EventHandler(this.button17_Click);
             // 
+            // button18
+            // 
+            this.button18.Location = new System.Drawing.Point(86, 430);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(75, 40);
+            this.button18.TabIndex = 47;
+            this.button18.Text = "从视频中截取帧";
+            this.button18.UseVisualStyleBackColor = true;
+            this.button18.Click += new System.EventHandler(this.button18_Click);
+            // 
+            // textBox17
+            // 
+            this.textBox17.AllowDrop = true;
+            this.textBox17.Location = new System.Drawing.Point(171, 851);
+            this.textBox17.Name = "textBox17";
+            this.textBox17.Size = new System.Drawing.Size(787, 21);
+            this.textBox17.TabIndex = 48;
+            this.textBox17.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox17_DragDrop);
+            this.textBox17.DragEnter += new System.Windows.Forms.DragEventHandler(this.textBox17_DragEnter);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(93, 854);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(53, 12);
+            this.label9.TabIndex = 49;
+            this.label9.Text = "图片位置";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(92, 881);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(53, 12);
+            this.label10.TabIndex = 51;
+            this.label10.Text = "效果位置";
+            // 
+            // textBox18
+            // 
+            this.textBox18.AllowDrop = true;
+            this.textBox18.Location = new System.Drawing.Point(170, 878);
+            this.textBox18.Name = "textBox18";
+            this.textBox18.Size = new System.Drawing.Size(787, 21);
+            this.textBox18.TabIndex = 50;
+            this.textBox18.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox18_DragDrop);
+            this.textBox18.DragEnter += new System.Windows.Forms.DragEventHandler(this.textBox18_DragEnter);
+            // 
+            // button19
+            // 
+            this.button19.Location = new System.Drawing.Point(12, 488);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(75, 23);
+            this.button19.TabIndex = 52;
+            this.button19.Text = "装载原图片";
+            this.button19.UseVisualStyleBackColor = true;
+            this.button19.Click += new System.EventHandler(this.button19_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1664, 857);
+            this.ClientSize = new System.Drawing.Size(1664, 934);
+            this.Controls.Add(this.button19);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.textBox18);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.textBox17);
+            this.Controls.Add(this.button18);
             this.Controls.Add(this.button17);
             this.Controls.Add(this.button16);
             this.Controls.Add(this.button15);
@@ -592,6 +662,12 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button button16;
         private System.Windows.Forms.Button button17;
+        private System.Windows.Forms.Button button18;
+        private System.Windows.Forms.TextBox textBox17;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox textBox18;
+        private System.Windows.Forms.Button button19;
     }
 }
 
