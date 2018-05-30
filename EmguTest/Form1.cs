@@ -323,7 +323,7 @@ namespace EmguTest
             // 生成视频写入器
             VideoFileWriter writerzzz = new VideoFileWriter();
             // 新建一个视频(帧必须是二的倍数)
-            writerzzz.Open("testoutput.avi", (bufbitmap.Width / 2) * 2, (bufbitmap.Height / 2) * 2, readerzzz.FrameRate, VideoCodec.MPEG4, 25000000);
+            writerzzz.Open("testoutput.avi", (bufbitmap.Width / 2) * 2, (bufbitmap.Height / 2) * 2, readerzzz.FrameRate, VideoCodec.MPEG4,15000000);
 
             //确认变换位置
             List<IntPoint> corners = new List<IntPoint>();
@@ -712,17 +712,24 @@ namespace EmguTest
             buff = new IntPoint((int)dd.X, (int)dd.Y);
             corners3.Add(buff);
 
-
+            textBox1.Text = ((int)aa.X).ToString();
+            textBox2.Text = ((int)aa.Y).ToString();
+            textBox3.Text = ((int)bb.X).ToString();
+            textBox4.Text = ((int)bb.Y).ToString();
+            textBox5.Text = ((int)cc.X).ToString();
+            textBox6.Text = ((int)cc.Y).ToString();
+            textBox7.Text = ((int)dd.X).ToString();
+            textBox8.Text = ((int)dd.Y).ToString();
 
 
             BitmapData data = testbitmap.LockBits(new Rectangle(0, 0, testbitmap.Width, testbitmap.Height),
     ImageLockMode.ReadWrite, testbitmap.PixelFormat);
 
-            Drawing.Polygon(data, corners, Color.Red);
-            for (int i = 0; i < corners.Count; i++)
+            Drawing.Polygon(data, corners3, Color.Red);
+            for (int i = 0; i < corners3.Count; i++)
             {
                 Drawing.FillRectangle(data,
-                    new Rectangle(corners[i].X - 2, corners[i].Y - 2, 5, 5),
+                    new Rectangle(corners3[i].X - 2, corners3[i].Y - 2, 5, 5),
                     Color.FromArgb(i * 32 + 127 + 32, i * 64, i * 64));
             }
 
