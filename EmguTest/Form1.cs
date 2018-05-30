@@ -37,6 +37,11 @@ namespace EmguTest
     {
         string OriPath;
 
+        public int posfinder = 0;
+
+        public Bitmap newbitmap;
+        public Bitmap curbitmap;
+
         public Form1()
         {
             InitializeComponent();
@@ -148,6 +153,462 @@ namespace EmguTest
 
             GetMatch();
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+
+            string pathsave = OriPath + "\\CameraPic.jpg";
+
+            snap(pathsave);
+
+
+
+            //Image<Bgra, byte> zzz = frame.ToImage<Bgra, byte>();
+
+            /*
+            for (int i = 0; i < zzz.Height; i++)
+            {
+                for (int ii = 0; ii < zzz.Width; ii++)
+                {
+                    zzz.Data[100, 100, 0] = (byte)(zzz.Data[100, 100, 0] * 0.8);
+                    zzz.Data[100, 100, 1] = (byte)(zzz.Data[100, 100, 1] * 0.8);
+                    zzz.Data[100, 100, 2] = (byte)(zzz.Data[100, 100, 2] * 0.8);
+
+                    //byte pic = zzz.Data[100, 100, 0];
+
+                }
+            }
+            */
+
+            //VideoWriter vw = new public VideoWriter(string fileName, int fps, int width, int height, bool isColor);
+
+            //Then write your frame
+
+
+
+
+            //Mat frame2 = zzz.Mat;
+
+
+
+            //frame2.Save(pathsave);
+            //viewer.ShowDialog(); //显示图像视窗 
+
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            inputoripic();
+
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+
+        }
+
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            //MessageBox.Show("横坐标:" + e.X.ToString() + "\n纵坐标:" + e.Y.ToString());
+
+            if (posfinder == 0)
+            {
+                int xxx = (int)(((double)curbitmap.Width * e.X) / (double)pictureBox1.Width);
+
+                int yyy = (int)(((double)curbitmap.Height * e.Y) / (double)pictureBox1.Height);
+
+                textBox1.Text = xxx.ToString();
+                textBox2.Text = yyy.ToString();
+
+                bitmapupdate(xxx, yyy);
+
+            }
+            else if (posfinder == 1)
+            {
+                int xxx = (int)(((double)curbitmap.Width * e.X) / (double)pictureBox1.Width);
+
+                int yyy = (int)(((double)curbitmap.Height * e.Y) / (double)pictureBox1.Height);
+
+                textBox3.Text = xxx.ToString();
+                textBox4.Text = yyy.ToString();
+
+                bitmapupdate(xxx, yyy);
+            }
+            else if (posfinder == 2)
+            {
+                int xxx = (int)(((double)curbitmap.Width * e.X) / (double)pictureBox1.Width);
+
+                int yyy = (int)(((double)curbitmap.Height * e.Y) / (double)pictureBox1.Height);
+
+                textBox5.Text = xxx.ToString();
+                textBox6.Text = yyy.ToString();
+
+                bitmapupdate(xxx, yyy);
+            }
+            else if (posfinder == 3)
+            {
+                int xxx = (int)(((double)curbitmap.Width * e.X) / (double)pictureBox1.Width);
+
+                int yyy = (int)(((double)curbitmap.Height * e.Y) / (double)pictureBox1.Height);
+
+                textBox7.Text = xxx.ToString();
+                textBox8.Text = yyy.ToString();
+
+                bitmapupdate(xxx, yyy);
+
+                posfinder = -1;
+            }
+
+            posfinder++;
+
+
+
+
+
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            pictureBox2.Dock = System.Windows.Forms.DockStyle.None;
+            ActiveForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            qchange();
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            fourbackchange();
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            //axWindowsMediaPlayer1.URL = OriPath + "\\other.avi";
+            videomake();
+            axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.avi";
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            pictureBox2.BringToFront();
+            pictureBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            ActiveForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            fullscreen();
+
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            backscreen();
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            diffanly();
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            picdiffer();
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            timer1.Start();
+
+
+        }
+        public int getstep = 0;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            string pathsave = OriPath + "\\Normalpic.jpg";
+            string pathsave2 = OriPath + "\\Whitepic.jpg";
+            string pathsave3 = OriPath + "\\CameraPic.jpg";
+
+            string pathread = OriPath + "\\White.jpg";
+            string pathread2 = OriPath + "\\Black.jpg";
+
+            Bitmap white = new Bitmap(pathread);
+            Bitmap black = new Bitmap(pathread2);
+
+
+            if (getstep == 0)
+            {
+                pictureBox2.Image = black;
+                fullscreen();
+                getstep++;
+            }
+            else if(getstep == 1)
+            {
+                snap(pathsave);
+
+                getstep++;
+            }
+            else if (getstep == 2)
+            {
+                pictureBox2.Image = white;
+                getstep++;
+            }
+            else if (getstep == 3)
+            {
+                snap(pathsave2);
+                snap(pathsave3);
+                //backscreen();
+                //进行投影差分
+                picdiffer();
+                //进行差分分析
+                diffanly();
+                //导入摄像头图像
+                inputoripic();
+                //转换成摄像头视角
+                qchange();
+                //匹配
+                GetMatch();
+                //得到图案
+                fourbackchange();
+
+                timer1.Stop();
+                getstep = 0;
+            }
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            string pathsave = OriPath + "\\White.jpg";
+            string pathread = OriPath + "\\Black.jpg";
+
+
+            Bitmap Normalbitmap = new Bitmap(1920, 1080, PixelFormat.Format24bppRgb);
+
+
+
+
+            //背景图片
+            BitmapData curimageData = Normalbitmap.LockBits(new Rectangle(0, 0, Normalbitmap.Width, Normalbitmap.Height),
+            ImageLockMode.ReadOnly, Normalbitmap.PixelFormat);
+
+
+            unsafe
+            {
+                try
+                {
+                    UnmanagedImage img = new UnmanagedImage(curimageData);
+
+                    int height = img.Height;
+                    int width = img.Width;
+                    int pixelSize = (img.PixelFormat == PixelFormat.Format24bppRgb) ? 3 : 4;
+                    byte* p = (byte*)img.ImageData.ToPointer();
+
+
+
+                    // for each line
+                    for (int y = 0; y < height; y++)
+                    {
+
+                        // for each pixel
+                        for (int x = 0; x < width; x++, p += pixelSize)
+                        {
+                            int delx = Math.Abs(width / 2 - x);
+                            int dely = Math.Abs(height / 2 - y);
+
+                            if((delx< (width / 4))&& (dely < (height / 4)))
+                            {
+                                p[RGB.R] = (byte)255;
+                                p[RGB.G] = (byte)255;
+                                p[RGB.B] = (byte)255;
+                            }
+                            else
+                            {
+                                p[RGB.R] = (byte)0;
+                                p[RGB.G] = (byte)0;
+                                p[RGB.B] = (byte)0;
+                            }
+
+                        }
+
+                    }
+
+
+
+                }
+                finally
+                {
+                    Normalbitmap.UnlockBits(curimageData); //Unlock
+
+                }
+
+
+
+
+            }
+
+            Normalbitmap.Save(pathsave);
+
+
+
+
+
+
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            foundcornors();
+        }
+
+        private void textBox17_DragDrop(object sender, DragEventArgs e)
+        {
+            string path = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
+            textBox17.Text = path;
+        }
+
+        private void textBox18_DragDrop(object sender, DragEventArgs e)
+        {
+            string path = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
+            textBox18.Text = path;
+        }
+
+        private void textBox17_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Link;
+            else e.Effect = DragDropEffects.None;
+        }
+
+        private void textBox18_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Link;
+            else e.Effect = DragDropEffects.None;
+        }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            string pathread3 = OriPath + "\\Effect.jpg";
+
+
+            // 生成视频生成读取器
+            VideoFileReader readerzzz = new VideoFileReader();
+            // 打开视频
+            readerzzz.Open(textBox18.Text);
+
+            //载入当前帧动画
+            Bitmap curbitmapsource = readerzzz.ReadVideoFrame();
+
+
+            curbitmapsource.Save(pathread3);
+
+            readerzzz.Dispose();
+            curbitmapsource.Dispose();
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            string pathread = OriPath + "\\OriSourcePic.jpg";
+
+            Bitmap bufbitmap = new Bitmap(textBox17.Text);
+
+            bufbitmap.Save(pathread);
+
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            string saveFileName = OriPath + "\\test.txt";
+
+            //write txt
+            StringBuilder builder = new StringBuilder();
+            FileStream fs = new FileStream(saveFileName, FileMode.Create);
+            StreamWriter sw = new StreamWriter(fs, Encoding.Default);
+            builder.AppendLine(textBox1.Text);
+            builder.AppendLine(textBox2.Text);
+            builder.AppendLine(textBox3.Text);
+            builder.AppendLine(textBox4.Text);
+            builder.AppendLine(textBox5.Text);
+            builder.AppendLine(textBox6.Text);
+            builder.AppendLine(textBox7.Text);
+            builder.AppendLine(textBox8.Text);
+
+            sw.Write(builder);
+            sw.Close();
+            fs.Close();
+
+
+        }
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+            string filePath = OriPath + "\\test.txt";
+
+            //read txt
+            string[] allLines = File.ReadAllLines(filePath);
+
+            textBox1.Text = allLines[0];
+            textBox2.Text = allLines[1];
+            textBox3.Text = allLines[2];
+            textBox4.Text = allLines[3];
+            textBox5.Text = allLines[4];
+            textBox6.Text = allLines[5];
+            textBox7.Text = allLines[6];
+            textBox8.Text = allLines[7];
+
+            int dfs = 13;
+        }
+
+        public void inputoripic()
+        {
+            string pathread = OriPath + "\\CameraPic.jpg";
+            Bitmap bufbitmap = new Bitmap(pathread);
+
+            newbitmap = new Bitmap(bufbitmap);
+
+            curbitmap = new Bitmap(bufbitmap);
+
+
+            pictureBox1.Image = curbitmap;
+        }
+        private void snap(string pathsave)
+        {
+
+
+            Mat frame = new Mat();
+
+
+            /*
+            Application.Idle += new EventHandler(delegate (object sender2, EventArgs e2)
+            {  // “Idle”处理循环的事件处理过程  
+                viewer.Image = capture.QueryFrame(); //在视窗中显示抓取的帧图像  
+            });
+            */
+
+            //ImageViewer viewer = new ImageViewer(); //创建图像视窗  
+            VideoCapture capture = new VideoCapture(); //创建摄像头捕获
+
+            capture.SetCaptureProperty(CapProp.FrameHeight, 900);
+            capture.SetCaptureProperty(CapProp.FrameWidth, 1600);
+            //capture.ImageGrabbed += ProcessFrame;
+
+
+
+            capture.Retrieve(frame, 0);    //接收数据
+
+            Bitmap bufbitmap = new Bitmap(frame.Bitmap);
+
+            pictureBox1.Image = bufbitmap;
+
+
+            frame.Save(pathsave);
+            frame.Dispose();
+            capture.Dispose();
+            //viewer.Dispose();
+        }
+
         private void GetMatch()
         {
             string pathread = OriPath + "\\OriSourcePic.jpg";
@@ -323,7 +784,7 @@ namespace EmguTest
             // 生成视频写入器
             VideoFileWriter writerzzz = new VideoFileWriter();
             // 新建一个视频(帧必须是二的倍数)
-            writerzzz.Open("testoutput.avi", (bufbitmap.Width / 2) * 2, (bufbitmap.Height / 2) * 2, readerzzz.FrameRate, VideoCodec.MPEG4,15000000);
+            writerzzz.Open("testoutput.avi", (bufbitmap.Width / 2) * 2, (bufbitmap.Height / 2) * 2, readerzzz.FrameRate, VideoCodec.MPEG4, 15000000);
 
             //确认变换位置
             List<IntPoint> corners = new List<IntPoint>();
@@ -363,170 +824,6 @@ namespace EmguTest
 
 
         }
-        private void button5_Click(object sender, EventArgs e)
-        {
-
-            string pathsave = OriPath + "\\CameraPic.jpg";
-
-            snap(pathsave);
-
-
-
-            //Image<Bgra, byte> zzz = frame.ToImage<Bgra, byte>();
-
-            /*
-            for (int i = 0; i < zzz.Height; i++)
-            {
-                for (int ii = 0; ii < zzz.Width; ii++)
-                {
-                    zzz.Data[100, 100, 0] = (byte)(zzz.Data[100, 100, 0] * 0.8);
-                    zzz.Data[100, 100, 1] = (byte)(zzz.Data[100, 100, 1] * 0.8);
-                    zzz.Data[100, 100, 2] = (byte)(zzz.Data[100, 100, 2] * 0.8);
-
-                    //byte pic = zzz.Data[100, 100, 0];
-
-                }
-            }
-            */
-
-            //VideoWriter vw = new public VideoWriter(string fileName, int fps, int width, int height, bool isColor);
-
-            //Then write your frame
-
-
-
-
-            //Mat frame2 = zzz.Mat;
-
-
-
-            //frame2.Save(pathsave);
-            //viewer.ShowDialog(); //显示图像视窗 
-
-        }
-        private void snap(string pathsave)
-        {
-            
-
-            Mat frame = new Mat();
-
-
-            /*
-            Application.Idle += new EventHandler(delegate (object sender2, EventArgs e2)
-            {  // “Idle”处理循环的事件处理过程  
-                viewer.Image = capture.QueryFrame(); //在视窗中显示抓取的帧图像  
-            });
-            */
-
-            //ImageViewer viewer = new ImageViewer(); //创建图像视窗  
-            VideoCapture capture = new VideoCapture(); //创建摄像头捕获
-
-            capture.SetCaptureProperty(CapProp.FrameHeight, 900);
-            capture.SetCaptureProperty(CapProp.FrameWidth, 1600);
-            //capture.ImageGrabbed += ProcessFrame;
-
-
-
-            capture.Retrieve(frame, 0);    //接收数据
-
-            pictureBox1.Image = frame.Bitmap;
-
-
-            frame.Save(pathsave);
-            //frame.Dispose();
-            capture.Dispose();
-            //viewer.Dispose();
-        }
-
-
-        public Bitmap newbitmap;
-        public Bitmap curbitmap;
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            inputoripic();
-
-
-        }
-        public void inputoripic()
-        {
-            string pathread = OriPath + "\\CameraPic.jpg";
-
-
-            newbitmap = new Bitmap(pathread);
-
-            curbitmap = new Bitmap(pathread);
-
-
-            pictureBox1.Image = curbitmap;
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-
-        }
-        public int posfinder = 0;
-        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
-        {
-            //MessageBox.Show("横坐标:" + e.X.ToString() + "\n纵坐标:" + e.Y.ToString());
-
-            if (posfinder == 0)
-            {
-                int xxx = (int)(((double)curbitmap.Width * e.X) / (double)pictureBox1.Width);
-
-                int yyy = (int)(((double)curbitmap.Height * e.Y) / (double)pictureBox1.Height);
-
-                textBox1.Text = xxx.ToString();
-                textBox2.Text = yyy.ToString();
-
-                bitmapupdate(xxx, yyy);
-
-            }
-            else if (posfinder == 1)
-            {
-                int xxx = (int)(((double)curbitmap.Width * e.X) / (double)pictureBox1.Width);
-
-                int yyy = (int)(((double)curbitmap.Height * e.Y) / (double)pictureBox1.Height);
-
-                textBox3.Text = xxx.ToString();
-                textBox4.Text = yyy.ToString();
-
-                bitmapupdate(xxx, yyy);
-            }
-            else if (posfinder == 2)
-            {
-                int xxx = (int)(((double)curbitmap.Width * e.X) / (double)pictureBox1.Width);
-
-                int yyy = (int)(((double)curbitmap.Height * e.Y) / (double)pictureBox1.Height);
-
-                textBox5.Text = xxx.ToString();
-                textBox6.Text = yyy.ToString();
-
-                bitmapupdate(xxx, yyy);
-            }
-            else if (posfinder == 3)
-            {
-                int xxx = (int)(((double)curbitmap.Width * e.X) / (double)pictureBox1.Width);
-
-                int yyy = (int)(((double)curbitmap.Height * e.Y) / (double)pictureBox1.Height);
-
-                textBox7.Text = xxx.ToString();
-                textBox8.Text = yyy.ToString();
-
-                bitmapupdate(xxx, yyy);
-
-                posfinder = -1;
-            }
-
-            posfinder++;
-
-
-
-
-
-        }
-
         public void bitmapupdate(int xxx, int yyy)
         {
 
@@ -601,42 +898,6 @@ namespace EmguTest
 
             ProjectorPos.Save(pathread2);
         }
-
-        private void pictureBox2_Click(object sender, EventArgs e)
-        {
-            pictureBox2.Dock = System.Windows.Forms.DockStyle.None;
-            ActiveForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-        }
-
-        private void button7_Click(object sender, EventArgs e)
-        {
-            qchange();
-        }
-
-        private void button8_Click(object sender, EventArgs e)
-        {
-            fourbackchange();
-        }
-
-        private void button9_Click(object sender, EventArgs e)
-        {
-            //axWindowsMediaPlayer1.URL = OriPath + "\\other.avi";
-            videomake();
-            axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.avi";
-        }
-
-        private void button10_Click(object sender, EventArgs e)
-        {
-            pictureBox2.BringToFront();
-            pictureBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            ActiveForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-        }
-
-        private void button11_Click(object sender, EventArgs e)
-        {
-            fullscreen();
-
-        }
         private void fullscreen()
         {
             this.SetVisibleCore(false);
@@ -655,21 +916,10 @@ namespace EmguTest
             //this.SetVisibleCore(true);
             this.WindowState = FormWindowState.Normal;
         }
-
-
-        private void button12_Click(object sender, EventArgs e)
-        {
-            backscreen();
-        }
-
-        private void button13_Click(object sender, EventArgs e)
-        {
-            diffanly();
-        }
         public void diffanly()
         {
-            string pathsave = OriPath + "\\Normalpic.jpg";
-            string pathsave2 = OriPath + "\\Whitepic.jpg";
+            //string pathsave = OriPath + "\\Normalpic.jpg";
+            //string pathsave2 = OriPath + "\\Whitepic.jpg";
             string pathsave3 = OriPath + "\\diffedpic.jpg";
 
 
@@ -875,9 +1125,9 @@ namespace EmguTest
                             float bb = Math.Abs(p2[RGB.B] - p[RGB.B]);
 
 
-                            p[RGB.R] = (byte)rr ;
-                            p[RGB.G] = (byte)gg ;
-                            p[RGB.B] = (byte)bb ;
+                            p[RGB.R] = (byte)rr;
+                            p[RGB.G] = (byte)gg;
+                            p[RGB.B] = (byte)bb;
 
                         }
 
@@ -907,151 +1157,6 @@ namespace EmguTest
 
 
         }
-
-        private void button14_Click(object sender, EventArgs e)
-        {
-            picdiffer();
-        }
-
-        private void button15_Click(object sender, EventArgs e)
-        {
-            timer1.Start();
-
-
-        }
-        public int getstep = 0;
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            string pathsave = OriPath + "\\Normalpic.jpg";
-            string pathsave2 = OriPath + "\\Whitepic.jpg";
-            string pathsave3 = OriPath + "\\CameraPic.jpg";
-
-            string pathread = OriPath + "\\White.jpg";
-            string pathread2 = OriPath + "\\Black.jpg";
-
-            Bitmap white = new Bitmap(pathread);
-            Bitmap black = new Bitmap(pathread2);
-
-
-            if (getstep == 0)
-            {
-                pictureBox2.Image = black;
-                fullscreen();
-                getstep++;
-            }
-            else if(getstep == 1)
-            {
-                snap(pathsave);
-
-                getstep++;
-            }
-            else if (getstep == 2)
-            {
-                pictureBox2.Image = white;
-                getstep++;
-            }
-            else if (getstep == 3)
-            {
-                snap(pathsave2);
-                snap(pathsave3);
-                //backscreen();
-                //进行投影差分
-                picdiffer();
-                //进行差分分析
-                diffanly();
-                //导入摄像头图像
-                inputoripic();
-                //转换成摄像头视角
-                qchange();
-                //匹配
-                GetMatch();
-                //得到图案
-                fourbackchange();
-
-                timer1.Stop();
-                getstep = 0;
-            }
-        }
-
-        private void button16_Click(object sender, EventArgs e)
-        {
-            string pathsave = OriPath + "\\White.jpg";
-            string pathread = OriPath + "\\Black.jpg";
-
-
-            Bitmap Normalbitmap = new Bitmap(1920, 1080, PixelFormat.Format24bppRgb);
-
-
-
-
-            //背景图片
-            BitmapData curimageData = Normalbitmap.LockBits(new Rectangle(0, 0, Normalbitmap.Width, Normalbitmap.Height),
-            ImageLockMode.ReadOnly, Normalbitmap.PixelFormat);
-
-
-            unsafe
-            {
-                try
-                {
-                    UnmanagedImage img = new UnmanagedImage(curimageData);
-
-                    int height = img.Height;
-                    int width = img.Width;
-                    int pixelSize = (img.PixelFormat == PixelFormat.Format24bppRgb) ? 3 : 4;
-                    byte* p = (byte*)img.ImageData.ToPointer();
-
-
-
-                    // for each line
-                    for (int y = 0; y < height; y++)
-                    {
-
-                        // for each pixel
-                        for (int x = 0; x < width; x++, p += pixelSize)
-                        {
-                            int delx = Math.Abs(width / 2 - x);
-                            int dely = Math.Abs(height / 2 - y);
-
-                            if((delx< (width / 4))&& (dely < (height / 4)))
-                            {
-                                p[RGB.R] = (byte)255;
-                                p[RGB.G] = (byte)255;
-                                p[RGB.B] = (byte)255;
-                            }
-                            else
-                            {
-                                p[RGB.R] = (byte)0;
-                                p[RGB.G] = (byte)0;
-                                p[RGB.B] = (byte)0;
-                            }
-
-                        }
-
-                    }
-
-
-
-                }
-                finally
-                {
-                    Normalbitmap.UnlockBits(curimageData); //Unlock
-
-                }
-
-
-
-
-            }
-
-            Normalbitmap.Save(pathsave);
-
-
-
-
-
-
-        }
-
         public void foundcornors()
         {
 
@@ -1062,7 +1167,7 @@ namespace EmguTest
 
             PointF testsdd = GetIntersection(aaa, ccc, bbb, ddd);
 
-            PointF aa= poschange2(aaa, testsdd);
+            PointF aa = poschange2(aaa, testsdd);
             PointF bb = poschange2(bbb, testsdd);
             PointF cc = poschange2(ccc, testsdd);
             PointF dd = poschange2(ddd, testsdd);
@@ -1200,108 +1305,6 @@ namespace EmguTest
             }
             // throw new Exception("不可能发生的情况");
             return new PointF(0, 0);
-        }
-
-        private void button17_Click(object sender, EventArgs e)
-        {
-            foundcornors();
-        }
-
-        private void textBox17_DragDrop(object sender, DragEventArgs e)
-        {
-            string path = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
-            textBox17.Text = path;
-        }
-
-        private void textBox18_DragDrop(object sender, DragEventArgs e)
-        {
-            string path = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
-            textBox18.Text = path;
-        }
-
-        private void textBox17_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Link;
-            else e.Effect = DragDropEffects.None;
-        }
-
-        private void textBox18_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Link;
-            else e.Effect = DragDropEffects.None;
-        }
-
-        private void button18_Click(object sender, EventArgs e)
-        {
-            string pathread3 = OriPath + "\\Effect.jpg";
-
-
-            // 生成视频生成读取器
-            VideoFileReader readerzzz = new VideoFileReader();
-            // 打开视频
-            readerzzz.Open(textBox18.Text);
-
-            //载入当前帧动画
-            Bitmap curbitmapsource = readerzzz.ReadVideoFrame();
-
-
-            curbitmapsource.Save(pathread3);
-
-            readerzzz.Dispose();
-            curbitmapsource.Dispose();
-        }
-
-        private void button19_Click(object sender, EventArgs e)
-        {
-            string pathread = OriPath + "\\OriSourcePic.jpg";
-
-            Bitmap bufbitmap = new Bitmap(textBox17.Text);
-
-            bufbitmap.Save(pathread);
-
-        }
-
-        private void button20_Click(object sender, EventArgs e)
-        {
-            string saveFileName = OriPath + "\\test.txt";
-
-            //write txt
-            StringBuilder builder = new StringBuilder();
-            FileStream fs = new FileStream(saveFileName, FileMode.Create);
-            StreamWriter sw = new StreamWriter(fs, Encoding.Default);
-            builder.AppendLine(textBox1.Text);
-            builder.AppendLine(textBox2.Text);
-            builder.AppendLine(textBox3.Text);
-            builder.AppendLine(textBox4.Text);
-            builder.AppendLine(textBox5.Text);
-            builder.AppendLine(textBox6.Text);
-            builder.AppendLine(textBox7.Text);
-            builder.AppendLine(textBox8.Text);
-
-            sw.Write(builder);
-            sw.Close();
-            fs.Close();
-
-
-        }
-
-        private void button21_Click(object sender, EventArgs e)
-        {
-            string filePath = OriPath + "\\test.txt";
-
-            //read txt
-            string[] allLines = File.ReadAllLines(filePath);
-
-            textBox1.Text = allLines[0];
-            textBox2.Text = allLines[1];
-            textBox3.Text = allLines[2];
-            textBox4.Text = allLines[3];
-            textBox5.Text = allLines[4];
-            textBox6.Text = allLines[5];
-            textBox7.Text = allLines[6];
-            textBox8.Text = allLines[7];
-
-            int dfs = 13;
         }
     }
 }
