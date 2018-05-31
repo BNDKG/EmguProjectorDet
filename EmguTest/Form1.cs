@@ -287,9 +287,14 @@ namespace EmguTest
 
         private void button9_Click(object sender, EventArgs e)
         {
+            axWindowsMediaPlayer1.URL = OriPath + "\\xxxx.avi";
+            axWindowsMediaPlayer1.Ctlcontrols.play();
+
             //axWindowsMediaPlayer1.URL = OriPath + "\\other.avi";
             videomake();
+
             axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.avi";
+            axWindowsMediaPlayer1.Ctlcontrols.play();
         }
 
         private void button10_Click(object sender, EventArgs e)
@@ -332,13 +337,15 @@ namespace EmguTest
             string pathsave = OriPath + "\\Normalpic.jpg";
             string pathsave2 = OriPath + "\\Whitepic.jpg";
             string pathsave3 = OriPath + "\\CameraPic.jpg";
+            string pathsave4 = OriPath + "\\White.jpg";
 
             string pathread = OriPath + "\\White.jpg";
             string pathread2 = OriPath + "\\Black.jpg";
+            string pathread3 = OriPath + "\\BlackandWhite.jpg";
 
-            Bitmap white = new Bitmap(pathread);
             Bitmap black = new Bitmap(pathread2);
-
+            Bitmap blackandwhite = new Bitmap(pathread3);
+            Bitmap White = new Bitmap(pathread);
 
             if (getstep == 0)
             {
@@ -348,18 +355,26 @@ namespace EmguTest
             }
             else if(getstep == 1)
             {
+                //先拍一张黑的图片
                 snap(pathsave);
 
                 getstep++;
             }
             else if (getstep == 2)
             {
-                pictureBox2.Image = white;
+                pictureBox2.Image = blackandwhite;
                 getstep++;
             }
             else if (getstep == 3)
             {
+                //再拍一张黑白的图片
                 snap(pathsave2);
+                pictureBox2.Image = White;
+                getstep++;
+            }
+            else if (getstep == 4)
+            {
+                //最后拍个完整的图片
                 snap(pathsave3);
                 //backscreen();
                 //进行投影差分
@@ -375,6 +390,7 @@ namespace EmguTest
                 //得到图案
                 fourbackchange();
 
+
                 timer1.Stop();
                 getstep = 0;
             }
@@ -382,8 +398,8 @@ namespace EmguTest
 
         private void button16_Click(object sender, EventArgs e)
         {
-            string pathsave = OriPath + "\\White.jpg";
-            string pathread = OriPath + "\\Black.jpg";
+            string pathsave = OriPath + "\\BlackandWhite.jpg";
+            //string pathread = OriPath + "\\Black.jpg";
 
 
             Bitmap Normalbitmap = new Bitmap(1920, 1080, PixelFormat.Format24bppRgb);
@@ -427,9 +443,9 @@ namespace EmguTest
                             }
                             else
                             {
-                                p[RGB.R] = (byte)0;
-                                p[RGB.G] = (byte)0;
-                                p[RGB.B] = (byte)0;
+                                p[RGB.R] = (byte)255;
+                                p[RGB.G] = (byte)255;
+                                p[RGB.B] = (byte)255;
                             }
 
                         }
@@ -569,7 +585,7 @@ namespace EmguTest
             newbitmap = new Bitmap(bufbitmap);
 
             curbitmap = new Bitmap(bufbitmap);
-
+            bufbitmap.Dispose();
 
             pictureBox1.Image = curbitmap;
         }
@@ -598,14 +614,20 @@ namespace EmguTest
 
             capture.Retrieve(frame, 0);    //接收数据
 
-            Bitmap bufbitmap = new Bitmap(frame.Bitmap);
+            //Bitmap bufbitmap = new Bitmap(frame.Bitmap);
 
-            pictureBox1.Image = bufbitmap;
-
+            //pictureBox1.Image = bufbitmap;
+            //Image<Bgra, byte> a = frame.ToImage<Bgra, byte>();
+            //Bitmap bufbitmap = a.Bitmap;
 
             frame.Save(pathsave);
             frame.Dispose();
             capture.Dispose();
+
+            //Thread.Sleep(1000);
+            //bufbitmap.Dispose();
+
+            //a.Dispose();
             //viewer.Dispose();
         }
 
@@ -718,6 +740,9 @@ namespace EmguTest
             newImage.Save(pathsave);
             */
 
+            b.Dispose();
+            a.Dispose();
+
             imageBox1.Image = result;
         }
         private void fourbackchange()
@@ -746,6 +771,7 @@ namespace EmguTest
 
             Bitmap image = new Bitmap(bufbitmap.Width, bufbitmap.Height);
 
+            bufbitmap.Dispose();
 
             // create filter
             BackwardQuadrilateralTransformation filter =
@@ -786,6 +812,7 @@ namespace EmguTest
             // 新建一个视频(帧必须是二的倍数)
             writerzzz.Open("testoutput.avi", (bufbitmap.Width / 2) * 2, (bufbitmap.Height / 2) * 2, readerzzz.FrameRate, VideoCodec.MPEG4, 15000000);
 
+
             //确认变换位置
             List<IntPoint> corners = new List<IntPoint>();
 
@@ -822,7 +849,7 @@ namespace EmguTest
             writerzzz.Close();
             readerzzz.Close();
 
-
+            bufbitmap.Dispose();
         }
         public void bitmapupdate(int xxx, int yyy)
         {
@@ -937,6 +964,8 @@ namespace EmguTest
             temp1 = new Bitmap(pathsave3);
             //灰度转换
             temp2 = new Grayscale(0.2125, 0.7154, 0.0721).Apply(temp1);
+            temp1.Dispose();
+
             //二值化
             temp3 = new Threshold(15).Apply(temp2);
 
@@ -1079,6 +1108,8 @@ namespace EmguTest
 
             Bitmap Normalbitmap = new Bitmap(buf);
 
+            buf.Dispose();
+
             buf = new Bitmap(pathsave2);
 
             Bitmap Whitebitmap = new Bitmap(buf);
@@ -1151,8 +1182,8 @@ namespace EmguTest
 
             //Normalbitmap.Save(pathsave3);
 
-            //Normalbitmap.Dispose();
-            //Whitebitmap.Dispose();
+            Normalbitmap.Dispose();
+            Whitebitmap.Dispose();
 
 
 
