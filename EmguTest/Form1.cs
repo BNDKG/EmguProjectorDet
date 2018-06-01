@@ -59,7 +59,9 @@ namespace EmguTest
             OriPath = System.IO.Directory.GetCurrentDirectory();
 
             //axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.avi";
-            //axWindowsMediaPlayer1.Ctlcontrols.stop();
+            axWindowsMediaPlayer1.settings.autoStart = false;
+
+            axWindowsMediaPlayer1.Ctlcontrols.stop();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -287,12 +289,12 @@ namespace EmguTest
 
         private void button9_Click(object sender, EventArgs e)
         {
-            axWindowsMediaPlayer1.URL = OriPath + "\\xxxx.avi";
-            axWindowsMediaPlayer1.Ctlcontrols.play();
-
+            //axWindowsMediaPlayer1.URL = OriPath + "\\xxxx.avi";
+            //axWindowsMediaPlayer1.Ctlcontrols.play();
+            //axWindowsMediaPlayer1.Dispose();
             //axWindowsMediaPlayer1.URL = OriPath + "\\other.avi";
             videomake();
-
+            //playerstart();
             axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.avi";
             axWindowsMediaPlayer1.Ctlcontrols.play();
         }
@@ -614,9 +616,9 @@ namespace EmguTest
 
             capture.Retrieve(frame, 0);    //接收数据
 
-            //Bitmap bufbitmap = new Bitmap(frame.Bitmap);
+            Bitmap bufbitmap = new Bitmap(frame.Bitmap);
 
-            //pictureBox1.Image = bufbitmap;
+            pictureBox1.Image = bufbitmap;
             //Image<Bgra, byte> a = frame.ToImage<Bgra, byte>();
             //Bitmap bufbitmap = a.Bitmap;
 
@@ -772,7 +774,7 @@ namespace EmguTest
             Bitmap image = new Bitmap(bufbitmap.Width, bufbitmap.Height);
 
             bufbitmap.Dispose();
-
+            a.Dispose();
             // create filter
             BackwardQuadrilateralTransformation filter =
                 new BackwardQuadrilateralTransformation(sourceImage, corners);
@@ -1337,5 +1339,6 @@ namespace EmguTest
             // throw new Exception("不可能发生的情况");
             return new PointF(0, 0);
         }
+
     }
 }

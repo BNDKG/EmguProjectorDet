@@ -111,7 +111,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(374, 800);
+            this.button2.Location = new System.Drawing.Point(1066, 831);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 3;
@@ -121,7 +121,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(455, 800);
+            this.button3.Location = new System.Drawing.Point(1066, 876);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 4;
@@ -447,7 +447,7 @@
             // 
             // button14
             // 
-            this.button14.Location = new System.Drawing.Point(536, 791);
+            this.button14.Location = new System.Drawing.Point(985, 867);
             this.button14.Name = "button14";
             this.button14.Size = new System.Drawing.Size(75, 40);
             this.button14.TabIndex = 43;
@@ -482,9 +482,9 @@
             // 
             // button17
             // 
-            this.button17.Location = new System.Drawing.Point(288, 793);
+            this.button17.Location = new System.Drawing.Point(985, 824);
             this.button17.Name = "button17";
-            this.button17.Size = new System.Drawing.Size(80, 37);
+            this.button17.Size = new System.Drawing.Size(75, 37);
             this.button17.TabIndex = 46;
             this.button17.Text = "推算总面积";
             this.button17.UseVisualStyleBackColor = true;
@@ -492,7 +492,7 @@
             // 
             // button18
             // 
-            this.button18.Location = new System.Drawing.Point(86, 430);
+            this.button18.Location = new System.Drawing.Point(12, 882);
             this.button18.Name = "button18";
             this.button18.Size = new System.Drawing.Size(75, 40);
             this.button18.TabIndex = 47;
@@ -540,7 +540,7 @@
             // 
             // button19
             // 
-            this.button19.Location = new System.Drawing.Point(12, 476);
+            this.button19.Location = new System.Drawing.Point(11, 840);
             this.button19.Name = "button19";
             this.button19.Size = new System.Drawing.Size(75, 40);
             this.button19.TabIndex = 52;
