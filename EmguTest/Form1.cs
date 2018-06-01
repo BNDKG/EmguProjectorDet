@@ -65,6 +65,10 @@ namespace EmguTest
         public Bitmap AutoUsedCurBitmap;
         //使用手动方法标记所使用的摄像头采集到的原图
         public Bitmap ManualUsedCurBitmap;
+        //Picturebox1专用bitmap
+        Bitmap Picturebox1sBitmap;
+        //Picturebox2专用bitmap
+        Bitmap Picturebox2sBitmap;
 
         public Form1()
         {
@@ -80,7 +84,8 @@ namespace EmguTest
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            OriPath = System.IO.Directory.GetCurrentDirectory();
+            
+            PathInit();
 
             //axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.avi";
             axWindowsMediaPlayer1.settings.autoStart = false;
@@ -319,8 +324,8 @@ namespace EmguTest
             //axWindowsMediaPlayer1.URL = OriPath + "\\other.avi";
             videomake();
             //playerstart();
-            axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.avi";
-            axWindowsMediaPlayer1.Ctlcontrols.play();
+            //axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.avi";
+            //axWindowsMediaPlayer1.Ctlcontrols.play();
         }
 
         private void button10_Click(object sender, EventArgs e)
@@ -361,12 +366,13 @@ namespace EmguTest
         private void timer1_Tick(object sender, EventArgs e)
         {
 
-            Bitmap black = new Bitmap(PathBlack);
-            Bitmap blackandwhite = new Bitmap(PathBlackandWhite);
-            Bitmap White = new Bitmap(PathWhite);
+            
+            
+            
 
             if (AutoMatchState == 0)
             {
+                Bitmap black = new Bitmap(PathBlack);
                 pictureBox2.Image = black;
                 fullscreen();
                 AutoMatchState++;
@@ -380,11 +386,13 @@ namespace EmguTest
             }
             else if (AutoMatchState == 2)
             {
+                Bitmap blackandwhite = new Bitmap(PathBlackandWhite);
                 pictureBox2.Image = blackandwhite;
                 AutoMatchState++;
             }
             else if (AutoMatchState == 3)
             {
+                Bitmap White = new Bitmap(PathWhite);
                 //再拍一张黑白的图片
                 Snap(PathWhiteCamera);
                 pictureBox2.Image = White;
@@ -481,7 +489,7 @@ namespace EmguTest
 
             Normalbitmap.Save(PathBlackandWhite);
 
-
+            Normalbitmap.Dispose();
 
 
 
@@ -585,14 +593,29 @@ namespace EmguTest
 
         }
         /// <summary>
-        /// 从文件中导入摄像头拍摄的照片
+        /// 从文件中导入摄像头拍摄的照片，内存检验ok
         /// </summary>
         public void inputoripic()
         {
             
             Bitmap bufbitmap = new Bitmap(PathCameraNow);
 
+            if (AutoUsedCurBitmap != null)
+            {
+                AutoUsedCurBitmap.Dispose();
+            }
+
             AutoUsedCurBitmap = new Bitmap(bufbitmap);
+
+
+            bufbitmap.Dispose();
+
+            bufbitmap = new Bitmap(PathCameraNow);
+
+            if (ManualUsedCurBitmap != null)
+            {
+                ManualUsedCurBitmap.Dispose();
+            }
 
             ManualUsedCurBitmap = new Bitmap(bufbitmap);
             
@@ -602,7 +625,7 @@ namespace EmguTest
             bufbitmap.Dispose();
         }
         /// <summary>
-        /// 使用emgu库，设定摄像头分辨率为1600x896，并显示到控件中同时保存。
+        /// 使用emgu库，设定摄像头分辨率为1600x896，并显示到控件中同时保存，内存检验ok
         /// </summary>
         /// <param name="pathsave">保存路径</param>
         private void Snap(string pathsave)
@@ -629,10 +652,14 @@ namespace EmguTest
 
 
             capture.Retrieve(frame, 0);    //接收数据
+            if (Picturebox1sBitmap != null){
+                Picturebox1sBitmap.Dispose();
+            }
 
-            Bitmap bufbitmap = new Bitmap(frame.Bitmap);
 
-            pictureBox1.Image = bufbitmap;
+            Picturebox1sBitmap = new Bitmap(frame.Bitmap);
+
+            pictureBox1.Image = Picturebox1sBitmap;
             //Image<Bgra, byte> a = frame.ToImage<Bgra, byte>();
             //Bitmap bufbitmap = a.Bitmap;
 
@@ -644,20 +671,23 @@ namespace EmguTest
             capture.Dispose();
 
         }
-
+        /// <summary>
+        /// 内存检验ok
+        /// </summary>
         private void GetMatch()
         {
+            //这里为什么不用new Image<Bgra, byte>(PathOriSourcePic).Resize(0.4, Inter.Area)是因为这样会导致读取的image内存无法释放，引发内存爆炸
+            Image<Bgra, byte> bufa = new Image<Bgra, byte>(PathOriSourcePic);
+            Image<Bgra, byte> a = bufa.Resize(0.4, Inter.Area);  //模板
             
-            Image<Bgra, byte> a = new Image<Bgra, byte>(PathOriSourcePic).Resize(0.4, Inter.Area);  //模板
-            Image<Bgra, byte> b = new Image<Bgra, byte>(PathQTransfed).Resize(0.4, Inter.Area);  //待匹配的图像
+            Image<Bgra, byte> bufb = new Image<Bgra, byte>(PathQTransfed);
+            Image<Bgra, byte> b = bufb.Resize(0.4, Inter.Area);  //待匹配的图像
 
             Mat homography = null;
             Mat mask = null;
             VectorOfKeyPoint modelKeyPoints = new VectorOfKeyPoint();
             VectorOfKeyPoint observedKeyPoints = new VectorOfKeyPoint();
             VectorOfVectorOfDMatch matches = new VectorOfVectorOfDMatch();
-
-
 
             UMat a1 = a.ToUMat();
             UMat b1 = b.ToUMat();
@@ -676,6 +706,7 @@ namespace EmguTest
             mask.SetTo(new MCvScalar(255));
             Features2DToolbox.VoteForUniqueness(matches, 0.8, mask);   //去除重复的匹配
 
+
             int Count = CvInvoke.CountNonZero(mask);      //用于寻找模板在图中的位置
             if (Count >= 4)
             {
@@ -688,7 +719,7 @@ namespace EmguTest
             Features2DToolbox.DrawMatches(a.Convert<Gray, byte>().Mat, modelKeyPoints, b.Convert<Gray, byte>().Mat, observedKeyPoints, matches, result, new MCvScalar(255, 0, 255), new MCvScalar(0, 255, 255), mask);
             //绘制匹配的关系图
 
-            List<IntPoint> corners = new List<IntPoint>();
+
 
             if (homography != null)     //如果在图中找到了模板，就把它画出来
             {
@@ -703,7 +734,7 @@ namespace EmguTest
                 points = CvInvoke.PerspectiveTransform(points, homography);
                 Point[] points2 = Array.ConvertAll<PointF, Point>(points, Point.Round);
                 VectorOfPoint vp = new VectorOfPoint(points2);
-                CvInvoke.Polylines(result, vp, true, new MCvScalar(255, 0, 0, 255), 15);
+                //CvInvoke.Polylines(result, vp, true, new MCvScalar(255, 0, 0, 255), 15);
 
 
                 textBox9.Text = Convert.ToString((int)(points2[3].X * 2.5));
@@ -751,12 +782,31 @@ namespace EmguTest
             */
             imageBox1.Image = result;
 
+            bufa.Dispose();
+            bufb.Dispose();
 
+            surf.Dispose();
+            modelDescriptors.Dispose();
+            observedDescriptors.Dispose();
+            matcher.Dispose();
+
+            homography.Dispose();
+            mask.Dispose();
+            modelKeyPoints.Dispose();
+            observedKeyPoints.Dispose();
+            matches.Dispose();
+            
+
+            a1.Dispose();
+            b1.Dispose();
             b.Dispose();
             a.Dispose();
 
 
         }
+        /// <summary>
+        /// 内存检测ok
+        /// </summary>
         private void fourbackchange()
         {
 
@@ -778,8 +828,7 @@ namespace EmguTest
 
             Bitmap image = new Bitmap(bufbitmap.Width, bufbitmap.Height);
 
-            bufbitmap.Dispose();
-            a.Dispose();
+
             // create filter
             BackwardQuadrilateralTransformation filter =
                 new BackwardQuadrilateralTransformation(sourceImage, corners);
@@ -788,17 +837,31 @@ namespace EmguTest
 
             newImage.Save(PathFinalEffect);
 
+            if (Picturebox1sBitmap != null)
+            {
+                Picturebox1sBitmap.Dispose();
+            }
+            Picturebox1sBitmap = new Bitmap(newImage);
+
+            newImage.Dispose();
+            image.Dispose();
+            bufbitmap.Dispose();
+            a.Dispose();
+            bufsourceImage.Dispose();
+            sourceImage.Dispose();
             //Bitmap bufimage = new Bitmap(pathread3);
 
-            pictureBox1.Image = newImage;
-            pictureBox2.Image = newImage;
+            pictureBox1.Image = Picturebox1sBitmap;
+            pictureBox2.Image = Picturebox1sBitmap;
+
+
 
         }
 
         private void videomake()
         {
 
-            Bitmap sourcepic = new Bitmap(PathEffect);
+            
 
             // 生成视频生成读取器
             VideoFileReader readerzzz = new VideoFileReader();
@@ -905,7 +968,9 @@ namespace EmguTest
 
         }
 
-
+        /// <summary>
+        /// 内存检验ok
+        /// </summary>
         public void qchange()
         {
 
@@ -920,9 +985,18 @@ namespace EmguTest
             // apply the filter
             Bitmap ProjectorPos = filter.Apply(AutoUsedCurBitmap);
 
-            pictureBox2.Image = ProjectorPos;
+            if (Picturebox2sBitmap != null)
+            {
+                Picturebox2sBitmap.Dispose();
+            }
+
+
+            Picturebox2sBitmap = new Bitmap(ProjectorPos);
+            pictureBox2.Image = Picturebox2sBitmap;
 
             ProjectorPos.Save(PathQTransfed);
+            ProjectorPos.Dispose();
+            
         }
         private void fullscreen()
         {
@@ -942,6 +1016,9 @@ namespace EmguTest
             //this.SetVisibleCore(true);
             this.WindowState = FormWindowState.Normal;
         }
+        /// <summary>
+        /// 内存检验ok
+        /// </summary>
         public void diffanly()
         {
 
@@ -954,7 +1031,7 @@ namespace EmguTest
             temp1 = new Bitmap(PathDiffer);
             //灰度转换
             temp2 = new Grayscale(0.2125, 0.7154, 0.0721).Apply(temp1);
-            temp1.Dispose();
+
 
             //二值化
             temp3 = new Threshold(15).Apply(temp2);
@@ -1014,6 +1091,10 @@ namespace EmguTest
 
             testbitmap.UnlockBits(data);
 
+            temp1.Dispose();
+            temp2.Dispose();
+            temp3.Dispose();
+            temp4.Dispose();
 
             pictureBox1.Image = testbitmap;
         }
@@ -1086,7 +1167,9 @@ namespace EmguTest
 
             return CornersOutput;
         }
-
+        /// <summary>
+        /// 内存检验ok
+        /// </summary>
         private void picdiffer()
         {  
 
@@ -1297,6 +1380,8 @@ namespace EmguTest
 
         public void PathInit()
         {
+            OriPath = System.IO.Directory.GetCurrentDirectory();
+
             PathCameraNow = OriPath + "\\CameraPic.jpg";
             PathBlackCamera = OriPath + "\\BlackCameraPic.jpg";
             PathWhiteCamera = OriPath + "\\WhiteCameraPic.jpg";
@@ -1314,6 +1399,11 @@ namespace EmguTest
 
             PathVideoSource = OriPath + "\\SourceVideo.mp4";
             PathTxtSave = OriPath + "\\test.txt";
+        }
+
+        private void button22_Click(object sender, EventArgs e)
+        {
+            axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.avi";
         }
     }
 }
