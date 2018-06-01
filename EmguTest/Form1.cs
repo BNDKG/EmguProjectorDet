@@ -35,12 +35,36 @@ namespace EmguTest
 {
     public partial class Form1 : Form
     {
+        //原始路径
         string OriPath;
 
-        public int posfinder = 0;
+        //所有资源路径
 
-        public Bitmap newbitmap;
-        public Bitmap curbitmap;
+
+        string PathCameraNow;
+        string PathBlackCamera ;
+        string PathWhiteCamera ;
+        string PathWhite ;
+        string PathBlack ;
+        string PathBlackandWhite;
+        string PathEffect ;
+        string PathOriSourcePic ;
+        string PathQTransfed ;
+        string PathFinalEffect ;
+        string PathDiffer  ;
+
+        string PathVideoSource ;
+        string PathTxtSave;
+
+
+        //自对对位状态号AutoMatchState
+        public int AutoMatchState = 0;
+        //手动找点计数器
+        public int ClickPosCounter = 0;
+        //使用自动方式寻找位置进行变换的摄像头采集原图
+        public Bitmap AutoUsedCurBitmap;
+        //使用手动方法标记所使用的摄像头采集到的原图
+        public Bitmap ManualUsedCurBitmap;
 
         public Form1()
         {
@@ -49,9 +73,9 @@ namespace EmguTest
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string path = OriPath;
+            //string path = OriPath;
 
-            System.Diagnostics.Process.Start("explorer.exe", path);
+            System.Diagnostics.Process.Start("explorer.exe", OriPath);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -76,7 +100,7 @@ namespace EmguTest
 
             string pathread2 = OriPath + "\\test2.jpg";
 
-            string pathread3 = OriPath + "\\testoutput.jpg";
+            string pathread3 = OriPath + "\\FinalEffect.jpg";
 
             //输入图像
             Image<Bgr, Byte> image = new Image<Bgr, Byte>(pathread);//从文件加载图片
@@ -159,9 +183,9 @@ namespace EmguTest
         private void button5_Click(object sender, EventArgs e)
         {
 
-            string pathsave = OriPath + "\\CameraPic.jpg";
+            //string PathCameraNow = OriPath + "\\CameraPic.jpg";
 
-            snap(pathsave);
+            Snap(PathCameraNow);
 
 
 
@@ -215,11 +239,11 @@ namespace EmguTest
         {
             //MessageBox.Show("横坐标:" + e.X.ToString() + "\n纵坐标:" + e.Y.ToString());
 
-            if (posfinder == 0)
+            if (ClickPosCounter == 0)
             {
-                int xxx = (int)(((double)curbitmap.Width * e.X) / (double)pictureBox1.Width);
+                int xxx = (int)(((double)ManualUsedCurBitmap.Width * e.X) / (double)pictureBox1.Width);
 
-                int yyy = (int)(((double)curbitmap.Height * e.Y) / (double)pictureBox1.Height);
+                int yyy = (int)(((double)ManualUsedCurBitmap.Height * e.Y) / (double)pictureBox1.Height);
 
                 textBox1.Text = xxx.ToString();
                 textBox2.Text = yyy.ToString();
@@ -227,43 +251,43 @@ namespace EmguTest
                 bitmapupdate(xxx, yyy);
 
             }
-            else if (posfinder == 1)
+            else if (ClickPosCounter == 1)
             {
-                int xxx = (int)(((double)curbitmap.Width * e.X) / (double)pictureBox1.Width);
+                int xxx = (int)(((double)ManualUsedCurBitmap.Width * e.X) / (double)pictureBox1.Width);
 
-                int yyy = (int)(((double)curbitmap.Height * e.Y) / (double)pictureBox1.Height);
+                int yyy = (int)(((double)ManualUsedCurBitmap.Height * e.Y) / (double)pictureBox1.Height);
 
                 textBox3.Text = xxx.ToString();
                 textBox4.Text = yyy.ToString();
 
                 bitmapupdate(xxx, yyy);
             }
-            else if (posfinder == 2)
+            else if (ClickPosCounter == 2)
             {
-                int xxx = (int)(((double)curbitmap.Width * e.X) / (double)pictureBox1.Width);
+                int xxx = (int)(((double)ManualUsedCurBitmap.Width * e.X) / (double)pictureBox1.Width);
 
-                int yyy = (int)(((double)curbitmap.Height * e.Y) / (double)pictureBox1.Height);
+                int yyy = (int)(((double)ManualUsedCurBitmap.Height * e.Y) / (double)pictureBox1.Height);
 
                 textBox5.Text = xxx.ToString();
                 textBox6.Text = yyy.ToString();
 
                 bitmapupdate(xxx, yyy);
             }
-            else if (posfinder == 3)
+            else if (ClickPosCounter == 3)
             {
-                int xxx = (int)(((double)curbitmap.Width * e.X) / (double)pictureBox1.Width);
+                int xxx = (int)(((double)ManualUsedCurBitmap.Width * e.X) / (double)pictureBox1.Width);
 
-                int yyy = (int)(((double)curbitmap.Height * e.Y) / (double)pictureBox1.Height);
+                int yyy = (int)(((double)ManualUsedCurBitmap.Height * e.Y) / (double)pictureBox1.Height);
 
                 textBox7.Text = xxx.ToString();
                 textBox8.Text = yyy.ToString();
 
                 bitmapupdate(xxx, yyy);
 
-                posfinder = -1;
+                ClickPosCounter = -1;
             }
 
-            posfinder++;
+            ClickPosCounter++;
 
 
 
@@ -333,51 +357,43 @@ namespace EmguTest
 
 
         }
-        public int getstep = 0;
+
         private void timer1_Tick(object sender, EventArgs e)
         {
-            string pathsave = OriPath + "\\Normalpic.jpg";
-            string pathsave2 = OriPath + "\\Whitepic.jpg";
-            string pathsave3 = OriPath + "\\CameraPic.jpg";
-            string pathsave4 = OriPath + "\\White.jpg";
 
-            string pathread = OriPath + "\\White.jpg";
-            string pathread2 = OriPath + "\\Black.jpg";
-            string pathread3 = OriPath + "\\BlackandWhite.jpg";
+            Bitmap black = new Bitmap(PathBlack);
+            Bitmap blackandwhite = new Bitmap(PathBlackandWhite);
+            Bitmap White = new Bitmap(PathWhite);
 
-            Bitmap black = new Bitmap(pathread2);
-            Bitmap blackandwhite = new Bitmap(pathread3);
-            Bitmap White = new Bitmap(pathread);
-
-            if (getstep == 0)
+            if (AutoMatchState == 0)
             {
                 pictureBox2.Image = black;
                 fullscreen();
-                getstep++;
+                AutoMatchState++;
             }
-            else if(getstep == 1)
+            else if(AutoMatchState == 1)
             {
                 //先拍一张黑的图片
-                snap(pathsave);
+                Snap(PathBlackCamera);
 
-                getstep++;
+                AutoMatchState++;
             }
-            else if (getstep == 2)
+            else if (AutoMatchState == 2)
             {
                 pictureBox2.Image = blackandwhite;
-                getstep++;
+                AutoMatchState++;
             }
-            else if (getstep == 3)
+            else if (AutoMatchState == 3)
             {
                 //再拍一张黑白的图片
-                snap(pathsave2);
+                Snap(PathWhiteCamera);
                 pictureBox2.Image = White;
-                getstep++;
+                AutoMatchState++;
             }
-            else if (getstep == 4)
+            else if (AutoMatchState == 4)
             {
                 //最后拍个完整的图片
-                snap(pathsave3);
+                Snap(PathCameraNow);
                 //backscreen();
                 //进行投影差分
                 picdiffer();
@@ -394,19 +410,14 @@ namespace EmguTest
 
 
                 timer1.Stop();
-                getstep = 0;
+                AutoMatchState = 0;
             }
         }
 
         private void button16_Click(object sender, EventArgs e)
         {
-            string pathsave = OriPath + "\\BlackandWhite.jpg";
-            //string pathread = OriPath + "\\Black.jpg";
-
 
             Bitmap Normalbitmap = new Bitmap(1920, 1080, PixelFormat.Format24bppRgb);
-
-
 
 
             //背景图片
@@ -468,7 +479,7 @@ namespace EmguTest
 
             }
 
-            Normalbitmap.Save(pathsave);
+            Normalbitmap.Save(PathBlackandWhite);
 
 
 
@@ -508,8 +519,6 @@ namespace EmguTest
 
         private void button18_Click(object sender, EventArgs e)
         {
-            string pathread3 = OriPath + "\\Effect.jpg";
-
 
             // 生成视频生成读取器
             VideoFileReader readerzzz = new VideoFileReader();
@@ -520,7 +529,7 @@ namespace EmguTest
             Bitmap curbitmapsource = readerzzz.ReadVideoFrame();
 
 
-            curbitmapsource.Save(pathread3);
+            curbitmapsource.Save(PathEffect);
 
             readerzzz.Dispose();
             curbitmapsource.Dispose();
@@ -528,21 +537,19 @@ namespace EmguTest
 
         private void button19_Click(object sender, EventArgs e)
         {
-            string pathread = OriPath + "\\OriSourcePic.jpg";
 
             Bitmap bufbitmap = new Bitmap(textBox17.Text);
 
-            bufbitmap.Save(pathread);
+            bufbitmap.Save(PathOriSourcePic);
 
         }
 
         private void button20_Click(object sender, EventArgs e)
         {
-            string saveFileName = OriPath + "\\test.txt";
 
             //write txt
             StringBuilder builder = new StringBuilder();
-            FileStream fs = new FileStream(saveFileName, FileMode.Create);
+            FileStream fs = new FileStream(PathTxtSave, FileMode.Create);
             StreamWriter sw = new StreamWriter(fs, Encoding.Default);
             builder.AppendLine(textBox1.Text);
             builder.AppendLine(textBox2.Text);
@@ -562,10 +569,9 @@ namespace EmguTest
 
         private void button21_Click(object sender, EventArgs e)
         {
-            string filePath = OriPath + "\\test.txt";
 
             //read txt
-            string[] allLines = File.ReadAllLines(filePath);
+            string[] allLines = File.ReadAllLines(PathTxtSave);
 
             textBox1.Text = allLines[0];
             textBox2.Text = allLines[1];
@@ -576,22 +582,30 @@ namespace EmguTest
             textBox7.Text = allLines[6];
             textBox8.Text = allLines[7];
 
-            int dfs = 13;
-        }
 
+        }
+        /// <summary>
+        /// 从文件中导入摄像头拍摄的照片
+        /// </summary>
         public void inputoripic()
         {
-            string pathread = OriPath + "\\CameraPic.jpg";
-            Bitmap bufbitmap = new Bitmap(pathread);
+            
+            Bitmap bufbitmap = new Bitmap(PathCameraNow);
 
-            newbitmap = new Bitmap(bufbitmap);
+            AutoUsedCurBitmap = new Bitmap(bufbitmap);
 
-            curbitmap = new Bitmap(bufbitmap);
+            ManualUsedCurBitmap = new Bitmap(bufbitmap);
+            
+
+            pictureBox1.Image = ManualUsedCurBitmap;
+
             bufbitmap.Dispose();
-
-            pictureBox1.Image = curbitmap;
         }
-        private void snap(string pathsave)
+        /// <summary>
+        /// 使用emgu库，设定摄像头分辨率为1600x896，并显示到控件中同时保存。
+        /// </summary>
+        /// <param name="pathsave">保存路径</param>
+        private void Snap(string pathsave)
         {
 
 
@@ -622,26 +636,20 @@ namespace EmguTest
             //Image<Bgra, byte> a = frame.ToImage<Bgra, byte>();
             //Bitmap bufbitmap = a.Bitmap;
 
+
             frame.Save(pathsave);
+
+
             frame.Dispose();
             capture.Dispose();
 
-            //Thread.Sleep(1000);
-            //bufbitmap.Dispose();
-
-            //a.Dispose();
-            //viewer.Dispose();
         }
 
         private void GetMatch()
         {
-            string pathread = OriPath + "\\OriSourcePic.jpg";
-            string pathread2 = OriPath + "\\QuadrilateralTransfedPic.jpg";
-            string pathread3 = OriPath + "\\Effect.jpg";
-            string pathsave = OriPath + "\\testoutput.jpg";
-
-            Image<Bgra, byte> a = new Image<Bgra, byte>(pathread).Resize(0.4, Inter.Area);  //模板
-            Image<Bgra, byte> b = new Image<Bgra, byte>(pathread2).Resize(0.4, Inter.Area);  //待匹配的图像
+            
+            Image<Bgra, byte> a = new Image<Bgra, byte>(PathOriSourcePic).Resize(0.4, Inter.Area);  //模板
+            Image<Bgra, byte> b = new Image<Bgra, byte>(PathQTransfed).Resize(0.4, Inter.Area);  //待匹配的图像
 
             Mat homography = null;
             Mat mask = null;
@@ -741,19 +749,16 @@ namespace EmguTest
             
             newImage.Save(pathsave);
             */
+            imageBox1.Image = result;
+
 
             b.Dispose();
             a.Dispose();
 
-            imageBox1.Image = result;
+
         }
         private void fourbackchange()
         {
-            string pathread = OriPath + "\\OriSourcePic.jpg";
-            string pathread2 = OriPath + "\\QuadrilateralTransfedPic.jpg";
-            string pathread3 = OriPath + "\\Effect.jpg";
-            string pathsave = OriPath + "\\testoutput.jpg";
-
 
             List<IntPoint> corners = new List<IntPoint>();
 
@@ -763,13 +768,13 @@ namespace EmguTest
             corners.Add(new IntPoint(Convert.ToInt32(textBox15.Text), Convert.ToInt32(textBox16.Text)));
 
 
-            Bitmap a = new Bitmap(pathread);
+            Bitmap a = new Bitmap(PathOriSourcePic);
             //效果图
-            Bitmap bufsourceImage = new Bitmap(pathread3);
+            Bitmap bufsourceImage = new Bitmap(PathEffect);
             //Bitmap sourceImage = new Bitmap(pathread3);
             Bitmap sourceImage = new Bitmap(bufsourceImage, a.Size);
             //变换图片的
-            Bitmap bufbitmap = new Bitmap(pathread2);
+            Bitmap bufbitmap = new Bitmap(PathQTransfed);
 
             Bitmap image = new Bitmap(bufbitmap.Width, bufbitmap.Height);
 
@@ -781,7 +786,7 @@ namespace EmguTest
             // apply the filter
             Bitmap newImage = filter.Apply(image);
 
-            newImage.Save(pathsave);
+            newImage.Save(PathFinalEffect);
 
             //Bitmap bufimage = new Bitmap(pathread3);
 
@@ -792,22 +797,16 @@ namespace EmguTest
 
         private void videomake()
         {
-            string pathread = OriPath + "\\OriSourcePic.jpg";
-            string pathread2 = OriPath + "\\QuadrilateralTransfedPic.jpg";
-            string pathread3 = OriPath + "\\Effect.jpg";
-            string pathsave = OriPath + "\\testoutput.jpg";
-            string pathvideosource = OriPath + "\\SourceVideo.mp4";
 
-
-            Bitmap sourcepic = new Bitmap(pathread3);
+            Bitmap sourcepic = new Bitmap(PathEffect);
 
             // 生成视频生成读取器
             VideoFileReader readerzzz = new VideoFileReader();
             // 打开视频
-            readerzzz.Open(pathvideosource);
+            readerzzz.Open(PathVideoSource);
 
             //变换图片的大小
-            Bitmap bufbitmap = new Bitmap(pathread2);
+            Bitmap bufbitmap = new Bitmap(PathQTransfed);
 
             // 生成视频写入器
             VideoFileWriter writerzzz = new VideoFileWriter();
@@ -859,8 +858,8 @@ namespace EmguTest
             //int xxx = 100;
             //int yyy = 100;
 
-            BitmapData curimageData = curbitmap.LockBits(new Rectangle(0, 0, curbitmap.Width, curbitmap.Height),
-            ImageLockMode.ReadOnly, curbitmap.PixelFormat);
+            BitmapData curimageData = ManualUsedCurBitmap.LockBits(new Rectangle(0, 0, ManualUsedCurBitmap.Width, ManualUsedCurBitmap.Height),
+            ImageLockMode.ReadOnly, ManualUsedCurBitmap.PixelFormat);
 
             unsafe
             {
@@ -895,13 +894,13 @@ namespace EmguTest
                 }
                 finally
                 {
-                    curbitmap.UnlockBits(curimageData); //Unlock
+                    ManualUsedCurBitmap.UnlockBits(curimageData); //Unlock
 
                 }
 
             }
 
-            pictureBox1.Image = curbitmap;
+            pictureBox1.Image = ManualUsedCurBitmap;
 
 
         }
@@ -909,8 +908,6 @@ namespace EmguTest
 
         public void qchange()
         {
-            //Convert.ToInt32(textBox1.Text);
-            string pathread2 = OriPath + "\\QuadrilateralTransfedPic.jpg";
 
             List<IntPoint> corners = new List<IntPoint>();
             corners.Add(new IntPoint(Convert.ToInt32(textBox1.Text), Convert.ToInt32(textBox2.Text)));
@@ -921,11 +918,11 @@ namespace EmguTest
             QuadrilateralTransformation filter =
                 new QuadrilateralTransformation(corners, 1920, 1080);
             // apply the filter
-            Bitmap ProjectorPos = filter.Apply(newbitmap);
+            Bitmap ProjectorPos = filter.Apply(AutoUsedCurBitmap);
 
             pictureBox2.Image = ProjectorPos;
 
-            ProjectorPos.Save(pathread2);
+            ProjectorPos.Save(PathQTransfed);
         }
         private void fullscreen()
         {
@@ -947,23 +944,14 @@ namespace EmguTest
         }
         public void diffanly()
         {
-            //string pathsave = OriPath + "\\Normalpic.jpg";
-            //string pathsave2 = OriPath + "\\Whitepic.jpg";
-            string pathsave3 = OriPath + "\\diffedpic.jpg";
-
 
             Bitmap temp1;
-
             Bitmap temp2;
             Bitmap temp3;
             Bitmap temp4;
-            Bitmap temp5;
 
-            Bitmap temp7;
-            Bitmap temp8;
-            Bitmap temp9;
 
-            temp1 = new Bitmap(pathsave3);
+            temp1 = new Bitmap(PathDiffer);
             //灰度转换
             temp2 = new Grayscale(0.2125, 0.7154, 0.0721).Apply(temp1);
             temp1.Dispose();
@@ -1100,19 +1088,15 @@ namespace EmguTest
         }
 
         private void picdiffer()
-        {
-            string pathsave = OriPath + "\\Normalpic.jpg";
-            string pathsave2 = OriPath + "\\Whitepic.jpg";
-            string pathsave3 = OriPath + "\\diffedpic.jpg";
-            string pathsave4 = OriPath + "\\diffedpic2.jpg";
+        {  
 
-            Bitmap buf = new Bitmap(pathsave);
+            Bitmap buf = new Bitmap(PathBlackCamera);
 
             Bitmap Normalbitmap = new Bitmap(buf);
 
             buf.Dispose();
 
-            buf = new Bitmap(pathsave2);
+            buf = new Bitmap(PathWhiteCamera);
 
             Bitmap Whitebitmap = new Bitmap(buf);
 
@@ -1180,7 +1164,7 @@ namespace EmguTest
 
             }
 
-            Normalbitmap.Save(pathsave3);
+            Normalbitmap.Save(PathDiffer);
 
             //Normalbitmap.Save(pathsave3);
 
@@ -1191,35 +1175,6 @@ namespace EmguTest
 
         }
         public void foundcornors()
-        {
-
-            PointF aaa = new PointF(Convert.ToInt32(textBox1.Text), Convert.ToInt32(textBox2.Text));
-            PointF bbb = new PointF(Convert.ToInt32(textBox3.Text), Convert.ToInt32(textBox4.Text));
-            PointF ccc = new PointF(Convert.ToInt32(textBox5.Text), Convert.ToInt32(textBox6.Text));
-            PointF ddd = new PointF(Convert.ToInt32(textBox7.Text), Convert.ToInt32(textBox8.Text));
-
-            PointF testsdd = GetIntersection(aaa, ccc, bbb, ddd);
-
-            PointF aa = poschange2(aaa, testsdd);
-            PointF bb = poschange2(bbb, testsdd);
-            PointF cc = poschange2(ccc, testsdd);
-            PointF dd = poschange2(ddd, testsdd);
-
-
-            textBox1.Text = ((int)aa.X).ToString();
-            textBox2.Text = ((int)aa.Y).ToString();
-            textBox3.Text = ((int)bb.X).ToString();
-            textBox4.Text = ((int)bb.Y).ToString();
-            textBox5.Text = ((int)cc.X).ToString();
-            textBox6.Text = ((int)cc.Y).ToString();
-            textBox7.Text = ((int)dd.X).ToString();
-            textBox8.Text = ((int)dd.Y).ToString();
-
-
-            PointF easdad = new PointF(6, 1);
-        }
-
-        public void foundcornors2()
         {
 
             PointF aaa = new PointF(Convert.ToInt32(textBox1.Text), Convert.ToInt32(textBox2.Text));
@@ -1340,5 +1295,25 @@ namespace EmguTest
             return new PointF(0, 0);
         }
 
+        public void PathInit()
+        {
+            PathCameraNow = OriPath + "\\CameraPic.jpg";
+            PathBlackCamera = OriPath + "\\BlackCameraPic.jpg";
+            PathWhiteCamera = OriPath + "\\WhiteCameraPic.jpg";
+
+
+            PathWhite = OriPath + "\\White.jpg";
+            PathBlack = OriPath + "\\Black.jpg";
+            PathBlackandWhite = OriPath + "\\BlackandWhite.jpg";
+            PathEffect = OriPath + "\\Effect.jpg";
+
+            PathOriSourcePic = OriPath + "\\OriSourcePic.jpg";
+            PathQTransfed = OriPath + "\\QuadrilateralTransfedPic.jpg";
+            PathFinalEffect = OriPath + "\\FinalEffect.jpg";
+            PathDiffer = OriPath + "\\Diffedpic.jpg";
+
+            PathVideoSource = OriPath + "\\SourceVideo.mp4";
+            PathTxtSave = OriPath + "\\test.txt";
+        }
     }
 }
