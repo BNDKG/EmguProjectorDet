@@ -52,6 +52,8 @@ namespace EmguTest
         string PathQTransfed ;
         string PathFinalEffect ;
         string PathDiffer  ;
+        string PathGameSource;
+        string PathGameSource2;
 
         string PathVideoSource ;
         string PathTxtSave;
@@ -1009,6 +1011,17 @@ namespace EmguTest
             pictureBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             ActiveForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
         }
+        private void fullscreen2()
+        {
+            this.SetVisibleCore(false);
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.WindowState = FormWindowState.Maximized;
+            this.SetVisibleCore(true);
+
+            pictureBox3.BringToFront();
+            pictureBox3.Dock = System.Windows.Forms.DockStyle.Fill;
+            ActiveForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+        }
         private void backscreen()
         {
             //this.SetVisibleCore(false);
@@ -1386,6 +1399,8 @@ namespace EmguTest
             PathBlackCamera = OriPath + "\\BlackCameraPic.jpg";
             PathWhiteCamera = OriPath + "\\WhiteCameraPic.jpg";
 
+            PathGameSource = OriPath + "\\GamePic.bmp";
+            PathGameSource2 = OriPath + "\\GamePic2.bmp";
 
             PathWhite = OriPath + "\\White.jpg";
             PathBlack = OriPath + "\\Black.jpg";
@@ -1405,5 +1420,322 @@ namespace EmguTest
         {
             axWindowsMediaPlayer1.URL = OriPath + "\\testoutput.avi";
         }
+        //使用自动方式寻找位置进行变换的摄像头采集原图
+        public static Bitmap BufferBitmap1;
+        //使用手动方法标记所使用的摄像头采集到的原图
+        public static Bitmap BufferBitmap2;
+
+        public static ThreadStart threadStart;
+        public static Thread thread;
+
+        private void button23_Click(object sender, EventArgs e)
+        {
+            //BufferBitmap1 = new Bitmap(PathGameSource);
+            //BufferBitmap2 = new Bitmap(PathGameSource2);
+            GameInit();
+
+            //fullscreen2();
+
+            over = true;
+
+            threadStart = new ThreadStart(StartThread);
+            thread = new Thread(threadStart);
+
+
+            thread.Start();//开始线程
+
+            timer2.Start();
+
+        }
+
+        public static bool changepic = true;
+        public static bool over = true;
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+
+
+            if (changepic)
+            {
+                if (BufferBitmap1 != null)
+                {
+                    Bitmap BufferBitmap3 = BufferBitmap1.Clone(new Rectangle(0, 0, BufferBitmap1.Width, BufferBitmap1.Height), BufferBitmap1.PixelFormat);
+                    Image<Bgr, Byte> imagezz = new Image<Bgr, Byte>(BufferBitmap3);
+                    imageBox2.Image = imagezz;//在ImageBox1控件中显示所创建好的图像。
+                    //pictureBox3.Image = BufferBitmap1;
+                    BufferBitmap3.Dispose();
+                }
+            }
+
+
+            else
+            {
+                if (BufferBitmap2 != null)
+                {
+                    Bitmap BufferBitmap3 = BufferBitmap2.Clone(new Rectangle(0, 0, BufferBitmap2.Width, BufferBitmap2.Height), BufferBitmap2.PixelFormat);
+                    Image<Bgr, Byte> imagezzz = new Image<Bgr, Byte>(BufferBitmap3);
+                    imageBox2.Image = imagezzz;//在ImageBox1控件中显示所创建好的图像。
+                    //pictureBox3.Image = BufferBitmap2;
+                    BufferBitmap3.Dispose();
+                }
+
+            }
+
+                if (over == false)
+                {
+                    timer2.Stop();
+                }
+
+
+
+            }
+
+        public static void StartThread()
+        {
+
+            while (over)
+            {
+                if (changepic)
+                {
+                    RouteUpdate();
+                    changepic = false;
+                }
+                else
+                {
+                    RouteUpdate();
+                    changepic = true;
+                }
+                Thread.Sleep(2);//wait
+
+
+            }
+
+
+        }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+            over = false;
+
+
+
+            pictureBox3.Dock = System.Windows.Forms.DockStyle.None;
+            ActiveForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+        }
+
+        private void button24_Click(object sender, EventArgs e)
+        {
+
+            fullscreen2();
+
+        }
+        public static int posx = 0;
+        public static int posy = 0;
+        public static moster[] mosters = new moster[20];
+
+        private void button25_Click(object sender, EventArgs e)
+        {
+            BufferBitmap1 = new Bitmap(1920, 1080, PixelFormat.Format24bppRgb);
+
+            Image<Bgr, Byte> imagezz = new Image<Bgr, Byte>(BufferBitmap1);
+            imageBox2.Image = imagezz;//在ImageBox1控件中显示所创建好的图像。
+
+        }
+
+
+        static int g_timer = 0;
+
+        private static void RouteUpdate()
+        {
+            if (g_timer > 1 && g_timer<600)
+            {
+                int jiange = g_timer / 30;
+                if (mosters[jiange].posx == 0)
+                {
+                    mosters[jiange].setpos(100, 100);
+                }
+            }
+
+
+            foreach (moster mosternow in mosters)
+            {
+                if (mosternow.posx != 0 && mosternow.posy != 0)
+                    mosternow.move();
+            }
+            DrewMap2(mosters);
+            g_timer++;
+        }
+        private static void GameInit()
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                mosters[i] = new moster();
+            }
+
+
+        }
+        private static void DrewMap(int dx,int dy)
+        {
+            Bitmap PicNow = new Bitmap(1920, 1080, PixelFormat.Format24bppRgb);
+
+
+            //背景图片
+            BitmapData curimageData = PicNow.LockBits(new Rectangle(0, 0, PicNow.Width, PicNow.Height),
+            ImageLockMode.ReadOnly, PicNow.PixelFormat);
+
+
+            unsafe
+            {
+                try
+                {
+                    UnmanagedImage img = new UnmanagedImage(curimageData);
+
+                    int height = img.Height;
+                    int width = img.Width;
+                    int pixelSize = (img.PixelFormat == PixelFormat.Format24bppRgb) ? 3 : 4;
+                    byte* p = (byte*)img.ImageData.ToPointer();
+
+
+
+                    // for each line
+                    for (int y = 0; y < height; y++)
+                    {
+
+                        // for each pixel
+                        for (int x = 0; x < width; x++, p += pixelSize)
+                        {
+
+
+                            if (((x - dx) < 50 && (x - dx) > 0) && ((y - dy) < 50 && (y - dy) > 0))
+                            {
+                                p[RGB.R] = (byte)255;
+                                p[RGB.G] = (byte)255;
+                                p[RGB.B] = (byte)255;
+                            }
+                            else
+                            {
+                                p[RGB.R] = (byte)0;
+                                p[RGB.G] = (byte)0;
+                                p[RGB.B] = (byte)0;
+                            }
+
+                        }
+
+                    }
+
+                }
+                finally
+                {
+                    PicNow.UnlockBits(curimageData); //Unlock
+
+                }
+
+            }
+            if (changepic)
+            {
+                if (BufferBitmap2 != null)
+                {
+                    BufferBitmap2.Dispose();
+                }
+
+                BufferBitmap2 = new Bitmap(PicNow);
+            }
+            else
+            {
+                if (BufferBitmap1 != null)
+                {
+                    BufferBitmap1.Dispose();
+                }
+                BufferBitmap1 = new Bitmap(PicNow);
+            }
+
+            PicNow.Dispose();
+
+
+
+        }
+
+        private static void DrewMap2(moster[] mostersinput)
+        {
+            try
+            {
+
+                Pen curpen = new Pen(Color.White);
+
+
+
+                Bitmap PicNow = new Bitmap(1920, 1080, PixelFormat.Format24bppRgb);
+                Graphics g = Graphics.FromImage(PicNow);
+
+                foreach (moster mosternow in mostersinput)
+                {
+                    if (mosternow.posx != 0 && mosternow.posy != 0)
+
+                        g.DrawRectangle(curpen, mosternow.posx, mosternow.posy, 20, 20);
+                }
+
+
+
+                if (changepic)
+                {
+                    if (BufferBitmap2 != null)
+                    {
+                        BufferBitmap2.Dispose();
+                    }
+                    BufferBitmap2 = PicNow.Clone(new Rectangle(0, 0, PicNow.Width, PicNow.Height), PicNow.PixelFormat);
+
+
+                }
+                else
+                {
+                    if (BufferBitmap1 != null)
+                    {
+                        BufferBitmap1.Dispose();
+                    }
+                    BufferBitmap1 = PicNow.Clone(new Rectangle(0, 0, PicNow.Width, PicNow.Height), PicNow.PixelFormat);
+
+                }
+                PicNow.Dispose();
+                g.Dispose();
+                curpen.Dispose();
+            }
+            catch
+            {
+                int wrong = 9;
+            }
+
+        }
+
+    }
+    public class moster
+    {
+        public int posx = 0;
+        public int posy = 0;
+        
+        public void setpos(int xx,int yy)
+        {
+            posx = xx;
+            posy = yy;
+        }
+        public void move()
+        {
+            if (posx < 1500 && posy == 100)
+            {
+                posx += 5;
+            }
+            else if (posx == 1500 && posy < 1000)
+            {
+                posy += 5;
+            }
+            else if (posy == 1000 && posx > 100)
+            {
+                posx -= 5;
+            }
+            else
+            {
+                posy -= 5;
+            }
+        }
+
     }
 }
